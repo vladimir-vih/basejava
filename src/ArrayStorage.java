@@ -3,18 +3,20 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    private int size = 0;
 
     void clear() {
-        for (int i = 0; i < storage.length; ++i) storage[i] = null;
+        for (int i = 0; i < size; ++i) storage[i] = null;
+        size = 0;
         System.out.println("Успешно удаленны все данные из хранилища резюме");
     }
 
     void save(Resume r) {
-        if (this.size() < storage.length) {
+        if (size < storage.length) {
             boolean isExistResume = false;
 
             //проверка есть ли такое резюме
-            for (int i = 0; i < this.size(); ++i) {
+            for (int i = 0; i < size; ++i) {
                 if (r.uuid.equals(storage[i].uuid)) {
                     isExistResume = true;
                     System.out.println("Такое резюме уже существует.");
@@ -24,14 +26,15 @@ public class ArrayStorage {
 
             //добавление нового резюме в storage
             if (!isExistResume) {
-                storage[this.size()] = r;
+                storage[size] = r;
+                size++;
                 System.out.println("Резюме успешно добавлено в хранилище");
             }
         } else System.out.println("Хранилище резюме заполнено, для добавления новог резюме необходим освободить место");
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < this.size(); ++i) {
+        for (int i = 0; i < size; ++i) {
             if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
             }
@@ -48,11 +51,12 @@ public class ArrayStorage {
     void delete(String uuid) {
         boolean isFoundResume = false;
 
-        for (int i = 0; i < this.size(); ++i) {
+        for (int i = 0; i < size; ++i) {
             if (storage[i].uuid.equals(uuid)) {
                 isFoundResume = true;
-                storage[i] = storage[this.size() - 1];
-                storage[this.size() - 1] = null;
+                storage[i] = storage[size - 1];
+                storage[size - 1] = null;
+                size--;
                 System.out.println("Резюме успешно удалено из хранилища.");
                 break;
             }
@@ -65,10 +69,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        if (this.size() > 0) {
-            Resume[] resumeExport = new Resume[this.size()];
+        if (size > 0) {
+            Resume[] resumeExport = new Resume[size];
 
-            for (int i = 0; i < this.size(); ++i) {
+            for (int i = 0; i < size; ++i) {
                 resumeExport[i] = storage[i];
             }
 
@@ -79,12 +83,6 @@ public class ArrayStorage {
     }
 
     int size() {
-        int size = 0;
-
-        for (int i = 0; i < storage.length; ++i) {
-            if (storage[i] == null) break;
-            size++;
-        }
         return size;
     }
 }
