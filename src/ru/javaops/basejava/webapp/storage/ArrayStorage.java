@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
     private int size = 0;
-    private final int INXDEX_NOT_FOUND = -1;
+    private final int INDEX_NOT_FOUND = -1;
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -25,7 +25,7 @@ public class ArrayStorage {
             }
         }
         //System.out.println("Index was not found, because resume " + resume.getUuid() + " doesn't exist at the storage ");
-        return INXDEX_NOT_FOUND;
+        return INDEX_NOT_FOUND;
     }
 
     public void save(Resume r) {
@@ -33,7 +33,7 @@ public class ArrayStorage {
         if (size < storage.length) {
             //добавление нового резюме в storage c проверкой в IF есть ли такое резюме
             int indexOfResume = findIndex(r.getUuid());
-            if (indexOfResume == INXDEX_NOT_FOUND) {
+            if (indexOfResume == INDEX_NOT_FOUND) {
                 storage[size] = r;
                 size++;
                 System.out.println("Resume " + r.getUuid() + " was added to the storage successfully");
@@ -43,7 +43,7 @@ public class ArrayStorage {
 
     public void update(Resume resume) {
         int indexOfResume = findIndex(resume.getUuid());
-        if (indexOfResume != INXDEX_NOT_FOUND) {
+        if (indexOfResume != INDEX_NOT_FOUND) {
             storage[indexOfResume] = resume;
             System.out.println("\nResume " + resume.getUuid() + " was updated successfully.");
         } else System.out.println("Update for the Resume " + resume.getUuid() + " wasn't completed, because resume doesn't exist at the storage");
@@ -52,7 +52,7 @@ public class ArrayStorage {
     public Resume get(String uuid) {
         int indexOfResume = findIndex(uuid);
 
-        if (indexOfResume != INXDEX_NOT_FOUND) {
+        if (indexOfResume != INDEX_NOT_FOUND) {
             return storage[indexOfResume];
         }
         System.out.println("Resume " + uuid + " was not found at the storage.");
@@ -66,7 +66,7 @@ public class ArrayStorage {
     public void delete(String uuid) {
         int indexOfResume = findIndex(uuid);
 
-        if (indexOfResume != INXDEX_NOT_FOUND) {
+        if (indexOfResume != INDEX_NOT_FOUND) {
             storage[indexOfResume] = storage[size - 1];
             storage[size - 1] = null;
             size--;
