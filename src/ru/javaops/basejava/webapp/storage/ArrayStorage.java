@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
     private int size = 0;
+    private final int INXDEX_NOT_FOUND = -1;
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -17,54 +18,44 @@ public class ArrayStorage {
         System.out.println("Storage was cleared successfully");
     }
 
-    private int findResumeIndexAtStorage(Resume resume) {
+    private int findIndex(String uuid) {
         for (int i = 0; i < size; ++i) {
-            if (storage[i].getUuid().equals(resume.getUuid())) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
         //System.out.println("Index was not found, because resume " + resume.getUuid() + " doesn't exist at the storage ");
-        return storage.length;
-    }
-
-    private int findResumeIndexAtStorage(String uuid) {
-        Resume resume = new Resume();
-        resume.setUuid(uuid);
-        return findResumeIndexAtStorage(resume);
+        return INXDEX_NOT_FOUND;
     }
 
     public void save(Resume r) {
         //Сохранение нового резюме, с проверкой что в storage есть свободное место
         if (size < storage.length) {
-            boolean isExistResume = false;
-
             //добавление нового резюме в storage c проверкой в IF есть ли такое резюме
-            int indexOfResume = findResumeIndexAtStorage(r);
-
-            if (indexOfResume == storage.length) {
+            int indexOfResume = findIndex(r.getUuid());
+            if (indexOfResume == INXDEX_NOT_FOUND) {
                 storage[size] = r;
                 size++;
-                System.out.println("Resume was added to the storage successfully");
-            } else System.out.println("Resume wasn't saved, because it already exists at the storage.");
-
-        } else System.out.println("The Resume can't be added, because the storage is full.");
+                System.out.println("Resume " + r.getUuid() + " was added to the storage successfully");
+            } else System.out.println("Resume " + r.getUuid() + " wasn't saved, because it already exists at the storage.");
+        } else System.out.println("The Resume " + r.getUuid() + " can't be added, because the storage is full.");
     }
 
     public void update(Resume resume) {
-        int indexOfResume = findResumeIndexAtStorage(resume);
-        if (indexOfResume != storage.length) {
+        int indexOfResume = findIndex(resume.getUuid());
+        if (indexOfResume != INXDEX_NOT_FOUND) {
             storage[indexOfResume] = resume;
             System.out.println("\nResume " + resume.getUuid() + " was updated successfully.");
         } else System.out.println("Update for the Resume " + resume.getUuid() + " wasn't completed, because resume doesn't exist at the storage");
     }
 
     public Resume get(String uuid) {
-        int indexOfResume = findResumeIndexAtStorage(uuid);
+        int indexOfResume = findIndex(uuid);
 
-        if (indexOfResume != storage.length) {
+        if (indexOfResume != INXDEX_NOT_FOUND) {
             return storage[indexOfResume];
-        } else System.out.println("Resume was not found at the storage.");
-
+        }
+        System.out.println("Resume " + uuid + " was not found at the storage.");
         /*
         вероятно нужно выбрасывать/ловить какой-то exception,
         но данная тема еще не затрагивалась в обучении, поэтому временно ставлю возврат null
@@ -73,24 +64,21 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        int indexOfResume = findResumeIndexAtStorage(uuid);
+        int indexOfResume = findIndex(uuid);
 
-        if (indexOfResume != storage.length) {
+        if (indexOfResume != INXDEX_NOT_FOUND) {
             storage[indexOfResume] = storage[size - 1];
             storage[size - 1] = null;
             size--;
-            System.out.println("The resume was successfully removed from the storage.");
-        } else System.out.println("The resume was not deleted from the storage, because it was not found at the storage.");
+            System.out.println("The resume " + uuid + " was successfully removed from the storage.");
+        } else System.out.println("The resume " + uuid + " was not deleted from the storage, because it was not found at the storage.");
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        if (size == 0) {
-            System.out.println("The storage is empty. There is no data for export.");
-            return new Resume[0];
-        } else return Arrays.copyOf(storage, size);
+        return Arrays.copyOf(storage, size);
     }
 
     public int size() {
