@@ -24,29 +24,30 @@ public class ArrayStorage {
                 return i;
             }
         }
-        //System.out.println("Index was not found, because resume " + resume.getUuid() + " doesn't exist at the storage ");
         return INDEX_NOT_FOUND;
     }
 
     public void save(Resume r) {
+        String uuid = r.getUuid();
         //Сохранение нового резюме, с проверкой что в storage есть свободное место
         if (size < storage.length) {
             //добавление нового резюме в storage c проверкой в IF есть ли такое резюме
-            int indexOfResume = findIndex(r.getUuid());
+            int indexOfResume = findIndex(uuid);
             if (indexOfResume == INDEX_NOT_FOUND) {
                 storage[size] = r;
                 size++;
-                System.out.println("Resume " + r.getUuid() + " was added to the storage successfully");
-            } else System.out.println("Resume " + r.getUuid() + " wasn't saved, because it already exists at the storage.");
-        } else System.out.println("The Resume " + r.getUuid() + " can't be added, because the storage is full.");
+                System.out.println("Resume " + uuid + " was added");
+            } else System.out.println("Can't save " + uuid + ", already exists.");
+        } else System.out.println("Can't add " + uuid + " , the storage is full.");
     }
 
     public void update(Resume resume) {
-        int indexOfResume = findIndex(resume.getUuid());
+        String uuid = resume.getUuid();
+        int indexOfResume = findIndex(uuid);
         if (indexOfResume != INDEX_NOT_FOUND) {
             storage[indexOfResume] = resume;
-            System.out.println("\nResume " + resume.getUuid() + " was updated successfully.");
-        } else System.out.println("Update for the Resume " + resume.getUuid() + " wasn't completed, because resume doesn't exist at the storage");
+            System.out.println("\nResume " + uuid + " was updated.");
+        } else System.out.println("Can't update " + uuid + " , doesn't exist");
     }
 
     public Resume get(String uuid) {
@@ -55,7 +56,7 @@ public class ArrayStorage {
         if (indexOfResume != INDEX_NOT_FOUND) {
             return storage[indexOfResume];
         }
-        System.out.println("Resume " + uuid + " was not found at the storage.");
+        System.out.println("Resume " + uuid + " not found.");
         /*
         вероятно нужно выбрасывать/ловить какой-то exception,
         но данная тема еще не затрагивалась в обучении, поэтому временно ставлю возврат null
@@ -70,8 +71,8 @@ public class ArrayStorage {
             storage[indexOfResume] = storage[size - 1];
             storage[size - 1] = null;
             size--;
-            System.out.println("The resume " + uuid + " was successfully removed from the storage.");
-        } else System.out.println("The resume " + uuid + " was not deleted from the storage, because it was not found at the storage.");
+            System.out.println(uuid + " removed.");
+        } else System.out.println("Can't delete " + uuid + ", not found.");
     }
 
     /**
