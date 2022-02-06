@@ -7,10 +7,8 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
-    private int size = 0;
-    private final int INDEX_NOT_FOUND = -1;
+public class ArrayStorage extends AbstractArrayStorage {
+    private static final int INDEX_NOT_FOUND = -1;
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -18,7 +16,7 @@ public class ArrayStorage {
         System.out.println("Storage was cleared successfully");
     }
 
-    private int findIndex(String uuid) {
+    protected int findIndex(String uuid) {
         for (int i = 0; i < size; ++i) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
@@ -30,7 +28,7 @@ public class ArrayStorage {
     public void save(Resume r) {
         String uuid = r.getUuid();
         //Сохранение нового резюме, с проверкой что в storage есть свободное место
-        if (size < storage.length) {
+        if (size < STORAGE_LIMIT) {
             //добавление нового резюме в storage c проверкой в IF есть ли такое резюме
             int indexOfResume = findIndex(uuid);
             if (indexOfResume == INDEX_NOT_FOUND) {
