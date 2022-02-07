@@ -2,85 +2,57 @@ package ru.javaops.basejava.webapp.storage;
 
 import ru.javaops.basejava.webapp.model.Resume;
 
-import java.util.Arrays;
-
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage extends AbstractArrayStorage {
-    private static final int INDEX_NOT_FOUND = -1;
-
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
-        System.out.println("Storage was cleared successfully");
-    }
-
-    protected int findIndex(String uuid) {
+    @Override
+    protected final int findIndex(String uuid) {
         for (int i = 0; i < size; ++i) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
-        return INDEX_NOT_FOUND;
+        return -1;
     }
 
-    public void save(Resume r) {
-        String uuid = r.getUuid();
-        //Сохранение нового резюме, с проверкой что в storage есть свободное место
-        if (size < STORAGE_LIMIT) {
-            //добавление нового резюме в storage c проверкой в IF есть ли такое резюме
-            int indexOfResume = findIndex(uuid);
-            if (indexOfResume == INDEX_NOT_FOUND) {
-                storage[size] = r;
-                size++;
-                System.out.println("Resume " + uuid + " was added");
-            } else System.out.println("Can't save " + uuid + ", already exists.");
-        } else System.out.println("Can't add " + uuid + " , the storage is full.");
-    }
+    @Override
+    public final void save(Resume r) {
+        final String uuid = r.getUuid();
 
-    public void update(Resume resume) {
-        String uuid = resume.getUuid();
-        int indexOfResume = findIndex(uuid);
-        if (indexOfResume != INDEX_NOT_FOUND) {
-            storage[indexOfResume] = resume;
-            System.out.println("\nResume " + uuid + " was updated.");
-        } else System.out.println("Can't update " + uuid + " , doesn't exist");
-    }
-
-    public Resume get(String uuid) {
-        int indexOfResume = findIndex(uuid);
-
-        if (indexOfResume != INDEX_NOT_FOUND) {
-            return storage[indexOfResume];
+        //Проверка что в storage есть свободное место
+        if (size >= STORAGE_LIMIT) {
+            System.out.println("Can't add " + uuid + " , the storage is full.");
+            return;
         }
-        System.out.println("Resume " + uuid + " not found.");
-        /*
-        вероятно нужно выбрасывать/ловить какой-то exception,
-        но данная тема еще не затрагивалась в обучении, поэтому временно ставлю возврат null
-        */
-        return null;
+
+        //Проверка есть ли такое резюме чтобы не было дубликата uuid
+        if (findIndex(uuid) >= 0) {
+            System.out.println("Can't save " + uuid + ", already exists.");
+            return;
+        }
+
+        //добавление нового резюме в storage c проверкой в IF есть ли такое резюме
+        storage[size] = r;
+        size++;
+        System.out.println("Resume " + uuid + " was added");
+
     }
 
-    public void delete(String uuid) {
-        int indexOfResume = findIndex(uuid);
+    @Override
+    public final void delete(String uuid) {
+        final int indexOfResume = findIndex(uuid);
 
-        if (indexOfResume != INDEX_NOT_FOUND) {
-            storage[indexOfResume] = storage[size - 1];
-            storage[size - 1] = null;
-            size--;
-            System.out.println(uuid + " removed.");
-        } else System.out.println("Can't delete " + uuid + ", not found.");
-    }
+        //Проверка есть ли такое резюме для удаления
+        if (indexOfResume < 0) {
+            System.out.println("Can't delete " + uuid + ", not found.");
+            return;
+        }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
-    }
-
-    public int size() {
-        return size;
+        //Удаление резюме
+        storage[indexOfResume] = storage[size - 1];
+        storage[size - 1] = null;
+        size--;
+        System.out.println(uuid + " removed.");
     }
 }
