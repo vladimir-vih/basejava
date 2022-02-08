@@ -18,6 +18,42 @@ public abstract class AbstractArrayStorage implements Storage{
 
     protected abstract int findIndex(String uuid);
 
+    protected abstract void saveAction(int indexResume, Resume r);
+
+    @Override
+    public final void save(Resume r) {
+        final String uuid = r.getUuid();
+
+        //Проверка что в storage есть свободное место
+        if (size >= STORAGE_LIMIT) {
+            System.out.println("Can't add " + uuid + " , the storage is full.");
+            return;
+        }
+
+        final int indexResume = findIndex(uuid);
+
+        //Проверка есть ли такое резюме
+        if (indexResume >= 0) {
+            System.out.println("Can't save " + uuid + ", already exists.");
+            return;
+        }
+
+        //Вставка в конец массива
+        if (indexResume == -size - 1) {
+            storage[size] = r;
+            size++;
+            System.out.println("Resume " + uuid + " was added");
+            return;
+        }
+
+        //Вставка не в конец массива
+        if (indexResume > -size - 1) {
+            saveAction(indexResume, r);
+            size++;
+            System.out.println("Resume " + uuid + " was added");
+        }
+    }
+
     public final void update(Resume resume) {
         final String uuid = resume.getUuid();
         final int findIndexResult= findIndex(uuid);
@@ -43,6 +79,35 @@ public abstract class AbstractArrayStorage implements Storage{
         }
         //Возврат резюме
         return storage[findIndexResult];
+    }
+
+    protected abstract void deleteAction(int indexResume);
+
+    @Override
+    public final void delete(String uuid) {
+        final int indexResume = findIndex(uuid);
+
+        //Проверка есть ли такое резюме
+        if (indexResume < 0) {
+            System.out.println("Can't delete " + uuid + " , doesn't exist");
+            return;
+        }
+
+        //Удаление в конце массива
+        if (indexResume == size - 1) {
+            storage[size - 1] = null;
+            size--;
+            System.out.println("Resume " + uuid + " was deleted");
+            return;
+        }
+
+        //Удаление не в конце массива
+        if (indexResume < size - 1) {
+            deleteAction(indexResume);
+            storage[size - 1] = null;
+            size--;
+            System.out.println("Resume " + uuid + " was deleted");
+        }
     }
 
     /**
