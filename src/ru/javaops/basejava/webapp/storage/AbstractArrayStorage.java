@@ -18,7 +18,7 @@ public abstract class AbstractArrayStorage implements Storage{
 
     protected abstract int findIndex(String uuid);
 
-    protected abstract void saveAction(int indexResume, Resume r);
+    protected abstract void saveToArray(int indexResume, Resume r);
 
     @Override
     public final void save(Resume r) {
@@ -38,17 +38,11 @@ public abstract class AbstractArrayStorage implements Storage{
             return;
         }
 
-        //Вставка в конец массива
-        if (indexResume == -size - 1) {
-            storage[size] = r;
-            size++;
-            System.out.println("Resume " + uuid + " was added");
-            return;
-        }
-
-        //Вставка не в конец массива
-        if (indexResume > -size - 1) {
-            saveAction(indexResume, r);
+        //Вставка в массив
+        if (indexResume >= -size - 1) {
+            if (indexResume == -size - 1) { //Проверка на вставку в конец массива
+                storage[size] = r;
+            } else saveToArray(indexResume, r);
             size++;
             System.out.println("Resume " + uuid + " was added");
         }
@@ -56,32 +50,32 @@ public abstract class AbstractArrayStorage implements Storage{
 
     public final void update(Resume resume) {
         final String uuid = resume.getUuid();
-        final int findIndexResult= findIndex(uuid);
+        final int indexResume= findIndex(uuid);
 
         //Проверка есть ли такое резюме
-        if (findIndexResult < 0) {
+        if (indexResume < 0) {
             System.out.println("Can't update " + uuid + " , doesn't exist");
             return;
         }
 
         //Обновление резюме
-        storage[findIndexResult] = resume;
+        storage[indexResume] = resume;
         System.out.println("Resume " + uuid + " was updated.");
     }
 
     public final Resume get(String uuid) {
-        final int findIndexResult= findIndex(uuid);
+        final int indexResume= findIndex(uuid);
 
         //Проверка есть ли такое резюме
-        if (findIndexResult < 0) {
+        if (indexResume < 0) {
             System.out.println("Can't get " + uuid + " , doesn't exist");
             return null;
         }
         //Возврат резюме
-        return storage[findIndexResult];
+        return storage[indexResume];
     }
 
-    protected abstract void deleteAction(int indexResume);
+    protected abstract void shiftItemsLeft(int indexResume);
 
     @Override
     public final void delete(String uuid) {
@@ -93,17 +87,11 @@ public abstract class AbstractArrayStorage implements Storage{
             return;
         }
 
-        //Удаление в конце массива
-        if (indexResume == size - 1) {
-            storage[size - 1] = null;
-            size--;
-            System.out.println("Resume " + uuid + " was deleted");
-            return;
-        }
-
-        //Удаление не в конце массива
-        if (indexResume < size - 1) {
-            deleteAction(indexResume);
+        //Удаление из массива
+        if (indexResume <= size - 1) {
+            if (indexResume < size - 1) { //Проверка на удаление из конца массива
+                shiftItemsLeft(indexResume); //смещение элемента(ов) массива влево на указанный индекс
+            }
             storage[size - 1] = null;
             size--;
             System.out.println("Resume " + uuid + " was deleted");
