@@ -1,14 +1,18 @@
 package ru.javaops.basejava.webapp.storage;
 
+import ru.javaops.basejava.webapp.exception.ExistStorageException;
+import ru.javaops.basejava.webapp.exception.NotExistStorageException;
+import ru.javaops.basejava.webapp.exception.StorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage{
+public abstract class AbstractArrayStorage implements ru.javaops.basejava.webapp.storage.Storage {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
+
 
     public final void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -26,16 +30,14 @@ public abstract class AbstractArrayStorage implements Storage{
 
         //Проверка что в storage есть свободное место
         if (size >= STORAGE_LIMIT) {
-            System.out.println("Can't add " + uuid + " , the storage is full.");
-            return;
+            throw new StorageException("The storage is full", uuid);
         }
 
         final int indexResume = findIndex(uuid);
 
         //Проверка есть ли такое резюме
         if (indexResume >= 0) {
-            System.out.println("Can't save " + uuid + ", already exists.");
-            return;
+            throw new ExistStorageException(uuid);
         }
 
         //Вставка в массив
@@ -54,8 +56,7 @@ public abstract class AbstractArrayStorage implements Storage{
 
         //Проверка есть ли такое резюме
         if (indexResume < 0) {
-            System.out.println("Can't update " + uuid + " , doesn't exist");
-            return;
+            throw new NotExistStorageException(uuid);
         }
 
         //Обновление резюме
@@ -68,8 +69,7 @@ public abstract class AbstractArrayStorage implements Storage{
 
         //Проверка есть ли такое резюме
         if (indexResume < 0) {
-            System.out.println("Can't get " + uuid + " , doesn't exist");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         //Возврат резюме
         return storage[indexResume];
@@ -83,8 +83,7 @@ public abstract class AbstractArrayStorage implements Storage{
 
         //Проверка есть ли такое резюме
         if (indexResume < 0) {
-            System.out.println("Can't delete " + uuid + " , doesn't exist");
-            return;
+            throw new NotExistStorageException(uuid);
         }
 
         //Удаление из массива
