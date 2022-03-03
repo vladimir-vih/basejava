@@ -3,6 +3,7 @@ package ru.javaops.basejava.webapp.storage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.exception.StorageException;
 import ru.javaops.basejava.webapp.model.Resume;
@@ -31,11 +32,19 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void save() {
+    public void saveNotExist() {
         Resume testResume = new Resume("UUID123");
         storage.save(testResume);
         Assert.assertEquals(4, storage.size());
         Assert.assertEquals(testResume, storage.get("UUID123"));
+    }
+
+    @Test(expected = ExistStorageException.class)
+    public void saveExist() {
+        Resume testResume = new Resume("UUID1");
+        storage.save(testResume);
+        Assert.assertEquals(3, storage.size());
+        Assert.assertEquals(testResume, storage.get("UUID1"));
     }
 
     @Test(expected = StorageException.class)
