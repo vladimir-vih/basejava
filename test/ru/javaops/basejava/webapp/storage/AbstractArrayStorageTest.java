@@ -52,8 +52,8 @@ public abstract class AbstractArrayStorageTest {
                 storage.save(new Resume());
             }
         }
-        catch (ArrayIndexOutOfBoundsException e) {
-            fail("Storage overflow occurs too early");
+        catch (StorageException e) {
+            fail("Storage exception occurs too early");
         }
         storage.save(new Resume());
     }
