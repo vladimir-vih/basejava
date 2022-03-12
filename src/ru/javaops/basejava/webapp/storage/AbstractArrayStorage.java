@@ -7,12 +7,11 @@ import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements ru.javaops.basejava.webapp.storage.Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage implements ru.javaops.basejava.webapp.storage.Storage {
     protected static final int STORAGE_LIMIT = 10000;
-
-    protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    protected Resume[] storage = new Resume[STORAGE_LIMIT];
 
     public final void clear() {
         Arrays.fill(storage, 0, size, null);
