@@ -1,13 +1,10 @@
 package ru.javaops.basejava.webapp.storage;
 
-import ru.javaops.basejava.webapp.exception.ExistStorageException;
-import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public class ListStorage extends AbstractStorage implements Storage {
+public class ListStorage extends AbstractStorage {
     ArrayList<Resume> storage = new ArrayList<>();
 
     @Override
@@ -16,43 +13,31 @@ public class ListStorage extends AbstractStorage implements Storage {
     }
 
     @Override
-    public void save(Resume r) {
-        for (Resume resume : storage) {
-            if (resume.getUuid().equals(r.getUuid())) { throw new ExistStorageException(r.getUuid()); }
+    protected int findIndex(String uuid) {
+        for (Resume r : storage) {
+            if (uuid.equals(r.getUuid())) return storage.indexOf(r);
         }
+        return -1;
+    }
+
+    @Override
+    protected void updateByIndex(int index, Resume r) {
+        storage.set(index, r);
+    }
+
+    @Override
+    protected final Resume getByIndex(int index) {
+        return storage.get(index);
+    }
+
+    @Override
+    protected void saveOperation(int index, Resume r) {
         storage.add(r);
     }
 
     @Override
-    public void update(Resume resume) {
-        for (Resume r : storage) {
-            if (resume.getUuid().equals(r.getUuid())) {
-                storage.set(storage.indexOf(r), resume);
-                return;
-            }
-        }
-        throw new NotExistStorageException(resume.getUuid());
-    }
-
-    @Override
-    public Resume get(String uuid) {
-        for (Resume r : storage) {
-            if (uuid.equals(r.getUuid())) return r;
-        }
-        throw new NotExistStorageException(uuid);
-    }
-
-    @Override
-    public void delete(String uuid) {
-        Iterator<Resume> iterator = storage.iterator();
-        while (iterator.hasNext()) {
-            Resume r = iterator.next();
-            if (uuid.equals(r.getUuid())) {
-                iterator.remove();
-                return;
-            }
-        }
-        throw new NotExistStorageException(uuid);
+    protected void deleteByIndex(int index) {
+        storage.remove(index);
     }
 
     @Override
