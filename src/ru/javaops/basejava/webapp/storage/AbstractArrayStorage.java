@@ -43,14 +43,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final Resume getByIndex(int index) {
+    protected final Resume getByIndexOrUuid(int index, String uuid) {
         return storage[index];
     }
 
     protected abstract void shiftItemsLeft(int indexResume);
 
     @Override
-    protected final void deleteByIndex(int index) {
+    protected final void deleteByIndexOrUuid(int index, String uuid) {
         //Удаление из массива
         if (index <= size - 1) {
             if (index < size - 1) { //Проверка на удаление из конца массива
