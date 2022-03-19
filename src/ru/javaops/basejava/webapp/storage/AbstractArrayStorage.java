@@ -4,6 +4,7 @@ import ru.javaops.basejava.webapp.exception.StorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.Map;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10000;
@@ -38,19 +39,21 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void updateByIndex(int index, Resume r) {
+    protected final void updateByUuidIndex(int index, Resume r) {
         storage[index] = r;
     }
 
     @Override
-    protected final Resume getByIndexOrUuid(int index, String uuid) {
+    protected final Resume getByUuidIndex(Map<String, Integer> uuidIndex) {
+        final int index = uuidIndex.values().toArray(new Integer[0])[0];
         return storage[index];
     }
 
     protected abstract void shiftItemsLeft(int indexResume);
 
     @Override
-    protected final void deleteByIndexOrUuid(int index, String uuid) {
+    protected final void deleteByUuidIndex(Map<String, Integer> uuidIndex) {
+        final int index = uuidIndex.values().toArray(new Integer[0])[0];
         //Удаление из массива
         if (index <= size - 1) {
             if (index < size - 1) { //Проверка на удаление из конца массива

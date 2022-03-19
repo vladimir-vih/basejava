@@ -2,18 +2,24 @@ package ru.javaops.basejava.webapp.storage;
 
 import ru.javaops.basejava.webapp.model.Resume;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage extends AbstractArrayStorage {
     @Override
-    protected final int findIndex(String uuid) {
+    protected final Map<String, Integer> findUuidIndex(String uuid) {
+        Map<String, Integer> uuidIndex = new HashMap<>();
         for (int i = 0; i < size; ++i) {
             if (storage[i].getUuid().equals(uuid)) {
-                return i;
+                uuidIndex.put(uuid, i);
+                return uuidIndex;
             }
         }
-        return -1;
+        uuidIndex.put(uuid, -1);
+        return uuidIndex;
     }
 
     @Override
