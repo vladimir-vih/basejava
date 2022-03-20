@@ -3,18 +3,13 @@ package ru.javaops.basejava.webapp.storage;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
-    protected final Map<String, Integer> findUuidIndex(String uuid) {
+    protected final Object findUuidIndex(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
-        Integer index = Arrays.binarySearch(storage, 0, size, searchKey);
-        Map<String, Integer> uuidIndex = new HashMap<>();
-        uuidIndex.put(uuid, index);
-        return uuidIndex;
+        return Arrays.binarySearch(storage, 0, size, searchKey);
     }
 
     @Override

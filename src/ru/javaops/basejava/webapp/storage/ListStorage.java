@@ -3,9 +3,7 @@ package ru.javaops.basejava.webapp.storage;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ListStorage extends AbstractStorage {
     private final List<Resume> storage = new ArrayList<>();
@@ -16,38 +14,34 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Map<String, Integer> findUuidIndex(String uuid) {
-        Map<String, Integer> uuidIndex = new HashMap<>();
+    protected Object findUuidIndex(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             Resume tempResume = storage.get(i);
             if (uuid.equals(tempResume.getUuid())) {
-                uuidIndex.put(uuid, i);
-                return uuidIndex;
+                return i;
             }
         }
-        uuidIndex.put(uuid, -1);
-        return uuidIndex;
+        return -1;
     }
 
     @Override
-    protected void updateByUuidIndex(int index, Resume r) {
-        storage.set(index, r);
+    protected void updateByUuidIndex(Object uuidIndex, Resume r) {
+        storage.set((int) uuidIndex, r);
     }
 
     @Override
-    protected final Resume getByUuidIndex(Map<String, Integer> uuidIndex) {
-        final int index = uuidIndex.values().toArray(new Integer[0])[0];
-        return storage.get(index);
+    protected final Resume getByUuidIndex(Object uuidIndex) {
+        return storage.get((int) uuidIndex);
     }
 
     @Override
-    protected void saveOperation(int index, Resume r) {
+    protected void saveOperation(Object uuidIndex, Resume r) {
         storage.add(r);
     }
 
     @Override
-    protected void deleteByUuidIndex(Map<String, Integer> uuidIndex) {
-        final int index = uuidIndex.values().toArray(new Integer[0])[0];
+    protected void deleteByUuidIndex(Object uuidIndex) {
+        final int index = (int) uuidIndex;
         storage.remove(index);
     }
 

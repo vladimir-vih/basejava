@@ -1,5 +1,6 @@
 package ru.javaops.basejava.webapp.storage;
 
+import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.HashMap;
@@ -9,36 +10,33 @@ public class MapStorage extends AbstractStorage{
     private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    protected Map<String, Integer> findUuidIndex(String uuid) {
-        Map<String, Integer> uuidIndex = new HashMap<>();
-        if (storage.containsKey(uuid)) {
-            uuidIndex.put(uuid, 0);
-            return uuidIndex;
-        }
-        uuidIndex.put(uuid, -1);
-        return uuidIndex;
+    protected Object findUuidIndex(String uuid) {
+        return uuid;
     }
 
     @Override
-    protected void saveOperation(int index, Resume r) {
-        storage.put(r.getUuid(), r);
+    protected void saveOperation(Object uuidIndex, Resume r) {
+        storage.put((String) uuidIndex, r);
     }
 
     @Override
-    protected void updateByUuidIndex(int index, Resume r) {
-        storage.put(r.getUuid(), r);
+    protected void updateByUuidIndex(Object uuidIndex, Resume r) {
+        storage.put((String) uuidIndex, r);
     }
 
     @Override
-    protected Resume getByUuidIndex(Map<String, Integer> uuidIndex) {
-        final String uuid = uuidIndex.keySet().toArray(new String[0])[0];
-        return storage.get(uuid);
+    protected Resume getByUuidIndex(Object uuidIndex) {
+        return storage.get((String) uuidIndex);
     }
 
     @Override
-    protected void deleteByUuidIndex(Map<String, Integer> uuidIndex) {
-        final String uuid = uuidIndex.keySet().toArray(new String[0])[0];
-        storage.remove(uuid);
+    protected void deleteByUuidIndex(Object uuidIndex) {
+        storage.remove((String) uuidIndex);
+    }
+
+    @Override
+    protected void checkExistResume(Object uuidIndex, String uuid) {
+        if (!storage.containsKey(uuid)) throw new NotExistStorageException(uuid);
     }
 
     @Override
