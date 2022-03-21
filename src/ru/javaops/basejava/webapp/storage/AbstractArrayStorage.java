@@ -20,8 +20,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void saveToArray(int indexResume, Resume r);
 
     @Override
-    protected final void saveOperation(Object uuidIndex, Resume r) {
-        final int index = (int) uuidIndex;
+    protected final void saveResume(Object index, Resume r) {
+        final int indexResume = (int) index;
 
         //Проверка что в storage есть свободное место
         if (size >= STORAGE_LIMIT) {
@@ -29,33 +29,33 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         }
 
         //Вставка в массив
-        if (index >= -size - 1) {
-            if (index == -size - 1) { //Проверка на вставку в конец массива
+        if (indexResume >= -size - 1) {
+            if (indexResume == -size - 1) { //Проверка на вставку в конец массива
                 storage[size] = r;
-            } else saveToArray(index, r);
+            } else saveToArray(indexResume, r);
             size++;
         }
     }
 
     @Override
-    protected final void updateByUuidIndex(Object uuidIndex, Resume r) {
-        storage[(int) uuidIndex] = r;
+    protected final void updateResume(Object index, Resume r) {
+        storage[(int) index] = r;
     }
 
     @Override
-    protected final Resume getByUuidIndex(Object uuidIndex) {
-        return storage[(int) uuidIndex];
+    protected final Resume getResume(Object index) {
+        return storage[(int) index];
     }
 
     protected abstract void shiftItemsLeft(int indexResume);
 
     @Override
-    protected final void deleteByUuidIndex(Object uuidIndex) {
-        final int index = (int) uuidIndex;
+    protected final void deleteResume(Object index) {
+        final int indexResume = (int) index;
         //Удаление из массива
-        if (index <= size - 1) {
-            if (index < size - 1) { //Проверка на удаление из конца массива
-                shiftItemsLeft(index); //смещение элемента(ов) массива влево на указанный индекс
+        if (indexResume <= size - 1) {
+            if (indexResume < size - 1) { //Проверка на удаление из конца массива
+                shiftItemsLeft(indexResume); //смещение элемента(ов) массива влево на указанный индекс
             }
             storage[size - 1] = null;
             size--;

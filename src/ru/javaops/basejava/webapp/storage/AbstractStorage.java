@@ -5,58 +5,59 @@ import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
-    protected abstract Object findUuidIndex(String uuid);
+    protected abstract Object findSearchKey(String uuid);
 
-    protected abstract void saveOperation(Object uuidIndex, Resume r);
+    protected abstract void saveResume(Object searchKey, Resume r);
 
     @Override
     public final void save(Resume r) {
         final String uuid = r.getUuid();
-        final Object uuidIndex = findUuidIndex(uuid);
+        final Object searchKey = findSearchKey(uuid);
         try {
-            checkExistResume(uuidIndex, uuid);
+            checkExistResume(searchKey, uuid);
         } catch (NotExistStorageException e) {
-            saveOperation(uuidIndex, r);
+            saveResume(searchKey, r);
             System.out.println("Resume " + uuid + " was added");
             return;
         }
         throw new ExistStorageException(uuid);
     }
 
-    protected abstract void updateByUuidIndex(Object uuidIndex, Resume r);
+    protected abstract void updateResume(Object searchKey, Resume r);
 
     @Override
     public final void update(Resume resume) {
         final String uuid = resume.getUuid();
-        final Object uuidIndex= findUuidIndex(uuid);
-        checkExistResume(uuidIndex, uuid);
+        final Object searchKey= findSearchKey(uuid);
+        checkExistResume(searchKey, uuid);
         //Обновление резюме
-        updateByUuidIndex(uuidIndex, resume);
+        updateResume(searchKey, resume);
         System.out.println("Resume " + uuid + " was updated.");
     }
 
-    protected abstract Resume getByUuidIndex(Object uuidIndex);
+    protected abstract Resume getResume(Object searchKey);
 
     @Override
     public final Resume get(String uuid) {
-        final Object uuidIndex = findUuidIndex(uuid);
-        checkExistResume(uuidIndex, uuid);
+        final Object searchKey = findSearchKey(uuid);
+        checkExistResume(searchKey, uuid);
         //Возврат резюме
-        return getByUuidIndex(uuidIndex);
+        return getResume(searchKey);
     }
 
-    protected abstract void deleteByUuidIndex(Object uuidIndex);
+    protected abstract void deleteResume(Object searchKey);
 
     @Override
     public final void delete(String uuid) {
-        final Object uuidIndex = findUuidIndex(uuid);
-        checkExistResume(uuidIndex, uuid);
+        final Object searchKey = findSearchKey(uuid);
+        checkExistResume(searchKey, uuid);
         //Удаление из коллекции
-        deleteByUuidIndex(uuidIndex);
+        deleteResume(searchKey);
         System.out.println("Resume " + uuid + " was deleted");
     }
 
-    protected void checkExistResume(Object uuidIndex, String uuid) {
-        if ((int) uuidIndex < 0) throw new NotExistStorageException(uuid);
+    protected boolean checkExistResume(Object searchKey, String uuid) {
+        if ((int) searchKey < 0) throw new NotExistStorageException(uuid);
+        return true;
     }
 }
