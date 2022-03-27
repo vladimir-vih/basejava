@@ -6,20 +6,24 @@ import java.util.UUID;
  * Initial resume class
  */
 public class Resume implements Comparable<Resume>{
-
-    // Unique identifier
     private String uuid;
+    private final String fullName;
 
     public Resume() {
-        this(UUID.randomUUID().toString());
+        this(UUID.randomUUID().toString(), "Random name");
     }
 
-    public Resume(String s) {
-        this.uuid = s;
+    public Resume(String uuid, String fullName) {
+        this.uuid = uuid;
+        this.fullName = fullName;
     }
 
     public String getUuid() {
         return uuid;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public void setUuid(String uuid) {
@@ -31,7 +35,7 @@ public class Resume implements Comparable<Resume>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid);
+        return uuid.equals(resume.uuid)&&fullName.equals(resume.fullName);
     }
 
     @Override

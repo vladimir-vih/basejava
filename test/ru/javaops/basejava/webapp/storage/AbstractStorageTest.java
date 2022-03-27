@@ -6,7 +6,8 @@ import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -18,16 +19,21 @@ public abstract class AbstractStorageTest {
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
 
+    private static final String FULL_NAME_1 = "FULLNAME1";
+    private static final String FULL_NAME_2 = "FULLNAME2";
+    private static final String FULL_NAME_3 = "FULLNAME3";
+    private static final String FULL_NAME_4 = "FULLNAME4";
+
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
     private static final Resume RESUME_3;
     private static final Resume RESUME_4;
 
     static {
-        RESUME_1 = new Resume(UUID_1);
-        RESUME_2 = new Resume(UUID_2);
-        RESUME_3 = new Resume(UUID_3);
-        RESUME_4 = new Resume(UUID_4);
+        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
+        RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
+        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
+        RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
     }
 
     public AbstractStorageTest(Storage storage) {
@@ -101,11 +107,13 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
-        Resume[] expectedResumes = {RESUME_1, RESUME_2, RESUME_3};
-        Resume[] actualResumes = storage.getAll();
-        Arrays.sort(actualResumes);
-        assertArrayEquals(expectedResumes, actualResumes);
+    public void getAllSorted() {
+        List<Resume> expectedResumes = new LinkedList<>();
+        expectedResumes.add(RESUME_1);
+        expectedResumes.add(RESUME_2);
+        expectedResumes.add(RESUME_3);
+        List<Resume> actualResumes = storage.getAllSorted();
+        assertEquals(expectedResumes, actualResumes);
     }
 
     @Test

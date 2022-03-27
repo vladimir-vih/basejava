@@ -3,34 +3,39 @@ package ru.javaops.basejava.webapp.storage;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-public class MapStorage extends AbstractStorage{
+public class MapStorageSearchResume extends AbstractStorage{
     private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected Object findSearchKey(String uuid) {
-        return uuid;
+        return storage.get(uuid);
     }
 
     @Override
-    protected void saveResume(Object uuid, Resume r) {
-        storage.put((String) uuid, r);
+    protected void saveResume(Object oldResume, Resume newResume) {
+        storage.put(newResume.getUuid(), newResume);
     }
 
     @Override
-    protected void updateResume(Object uuid, Resume r) {
-        storage.put((String) uuid, r);
+    protected void updateResume(Object oldResume, Resume newResume) {
+        Resume resume = (Resume) oldResume;
+        storage.replace(resume.getUuid(), resume, newResume);
     }
 
     @Override
-    protected Resume getResume(Object uuid) {
-        return storage.get((String) uuid);
+    protected Resume getResume(Object resume) {
+        return (Resume) resume;
     }
 
     @Override
-    protected void deleteResume(Object uuid) {
-        storage.remove((String) uuid);
+    protected void deleteResume(Object oldResume) {
+        Resume resume = (Resume) oldResume;
+        storage.remove(resume.getUuid(), resume);
     }
 
     @Override

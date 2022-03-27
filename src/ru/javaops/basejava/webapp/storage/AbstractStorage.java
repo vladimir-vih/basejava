@@ -4,6 +4,8 @@ import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
+import java.util.List;
+
 public abstract class AbstractStorage implements Storage {
     protected abstract Object findSearchKey(String uuid);
 
@@ -60,4 +62,18 @@ public abstract class AbstractStorage implements Storage {
         if ((int) searchKey < 0) throw new NotExistStorageException(uuid);
         return true;
     }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> resultList = storageAsLinkedList();
+        resultList.sort((r1, r2) -> {
+            final int fullnameCompareResult = r1.getFullName().compareTo(r2.getFullName());
+            if (fullnameCompareResult == 0) {
+                return r1.getUuid().compareTo(r2.getUuid());
+            } else return fullnameCompareResult;
+        });
+        return resultList;
+    }
+
+    protected abstract List<Resume> storageAsLinkedList();
 }
