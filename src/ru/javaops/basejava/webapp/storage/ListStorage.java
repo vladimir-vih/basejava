@@ -47,7 +47,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> storageAsLinkedList() {
+    protected List<Resume> getListResumes() {
         return new LinkedList<>(storage);
     }
 

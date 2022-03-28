@@ -1,9 +1,13 @@
 package ru.javaops.basejava.webapp.storage;
 
+import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class MapStorage extends AbstractStorage{
     private final Map<String, Resume> storage = new HashMap<>();
@@ -34,9 +38,15 @@ public class MapStorage extends AbstractStorage{
     }
 
     @Override
-    protected boolean checkExistResume(Object searchKey, String uuid) {
+    protected Object checkExistResume(String uuid) {
         if (!storage.containsKey(uuid)) throw new NotExistStorageException(uuid);
-        return true;
+        return uuid;
+    }
+
+    @Override
+    protected Object checkNotExistResume(String uuid) {
+        if (storage.containsKey(uuid)) throw new ExistStorageException(uuid);
+        return uuid;
     }
 
     @Override
@@ -45,7 +55,7 @@ public class MapStorage extends AbstractStorage{
     }
 
     @Override
-    protected List<Resume> storageAsLinkedList() {
+    protected List<Resume> getListResumes() {
         return new LinkedList<>(storage.values());
     }
 

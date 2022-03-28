@@ -9,14 +9,20 @@ import ru.javaops.basejava.webapp.storage.Storage;
  */
 public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new SortedArrayStorage();
+    private static final String UUID_1 = "uuid1";
+    private static final String UUID_2 = "uuid2";
+    private static final String UUID_3 = "uuid3";
+    private static final String UUID_4 = "uuid4";
+
+    private static final String FULL_NAME_1 = "FULLNAME1";
+    private static final String FULL_NAME_2 = "FULLNAME2";
+    private static final String FULL_NAME_3 = "FULLNAME3";
+    private static final String FULL_NAME_4 = "FULLNAME4";
 
     public static void main(String[] args) {
-        Resume r1 = new Resume();
-        r1.setUuid("uuid1");
-        Resume r2 = new Resume();
-        r2.setUuid("uuid2");
-        Resume r3 = new Resume();
-        r3.setUuid("uuid3");
+        Resume r1 = new Resume(UUID_1, FULL_NAME_1);
+        Resume r2 = new Resume(UUID_2, FULL_NAME_2);
+        Resume r3 = new Resume(UUID_3, FULL_NAME_3);
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
@@ -33,14 +39,12 @@ public class MainTestArrayStorage {
 
         //Test for the Update method
         System.out.println("\n======\nUpdate method test.");
-        Resume r2New = new Resume();
-        r2New.setUuid("uuid2");
+        Resume r2New = new Resume(UUID_2, FULL_NAME_2);
         ARRAY_STORAGE.update(r2New);
         printAll();
 
         System.out.println("Try to update uuid4");
-        Resume r4 = new Resume();
-        r4.setUuid("uuid4");
+        Resume r4 = new Resume(UUID_4, FULL_NAME_4);
         ARRAY_STORAGE.update(r4);
         printAll();
         System.out.println("The end of update method test\n======");

@@ -65,7 +65,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> storageAsLinkedList() {
+    protected List<Resume> getListResumes() {
         return new LinkedList<>(Arrays.asList(Arrays.copyOf(storage,size)));
     }
 
