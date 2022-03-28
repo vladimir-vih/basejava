@@ -8,6 +8,12 @@ import java.util.Comparator;
 import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
+
+    /**
+    findSearchKey method
+    @return negative int key if "uuid" is not found, otherwise it can return any Object type with the key.
+    */
+
     protected abstract Object findSearchKey(String uuid);
 
     protected abstract void saveResume(Object searchKey, Resume r);
@@ -52,14 +58,22 @@ public abstract class AbstractStorage implements Storage {
 
     protected Object checkExistResume(String uuid) {
         final Object searchKey = findSearchKey(uuid);
-        if ((int) searchKey < 0) throw new NotExistStorageException(uuid);
-        return searchKey;
+        try {
+            if (((int) searchKey) < 0) throw new NotExistStorageException(uuid);
+            return searchKey;
+        } catch (ClassCastException e) {
+            return searchKey;
+        }
     }
 
     protected Object checkNotExistResume(String uuid) {
         final Object searchKey = findSearchKey(uuid);
-        if ((int) searchKey >= 0) throw new ExistStorageException(uuid);
-        return searchKey;
+        try {
+            if (((int) searchKey) < 0) return searchKey;
+            throw new ExistStorageException(uuid);
+        } catch (ClassCastException e) {
+            throw new ExistStorageException(uuid);
+        }
     }
 
     @Override

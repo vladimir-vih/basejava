@@ -1,7 +1,5 @@
 package ru.javaops.basejava.webapp.storage;
 
-import ru.javaops.basejava.webapp.exception.ExistStorageException;
-import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.HashMap;
@@ -14,7 +12,8 @@ public class MapStorageSearchResume extends AbstractStorage{
 
     @Override
     protected Object findSearchKey(String uuid) {
-        return storage.get(uuid);
+        Resume resume = storage.get(uuid);
+        return resume == null ? -1 : resume ;
     }
 
     @Override
@@ -37,21 +36,6 @@ public class MapStorageSearchResume extends AbstractStorage{
     protected void deleteResume(Object oldResume) {
         Resume resume = (Resume) oldResume;
         storage.remove(resume.getUuid(), resume);
-    }
-
-    @Override
-    protected Object checkExistResume(String uuid) {
-        Resume resume = storage.get(uuid);
-        if (resume == null) {
-            throw new NotExistStorageException(uuid);
-        } else return resume;
-    }
-
-    @Override
-    protected Object checkNotExistResume(String uuid) {
-        if (storage.get(uuid) != null) {
-            throw new ExistStorageException(uuid);
-        } else return null;
     }
 
     @Override

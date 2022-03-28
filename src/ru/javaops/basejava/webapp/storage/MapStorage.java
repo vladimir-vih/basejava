@@ -1,7 +1,5 @@
 package ru.javaops.basejava.webapp.storage;
 
-import ru.javaops.basejava.webapp.exception.ExistStorageException;
-import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.HashMap;
@@ -14,12 +12,12 @@ public class MapStorage extends AbstractStorage{
 
     @Override
     protected Object findSearchKey(String uuid) {
-        return uuid;
+        return storage.containsKey(uuid) ? uuid : new Integer(-1);
     }
 
     @Override
     protected void saveResume(Object uuid, Resume r) {
-        storage.put((String) uuid, r);
+        storage.put(r.getUuid(), r);
     }
 
     @Override
@@ -35,18 +33,6 @@ public class MapStorage extends AbstractStorage{
     @Override
     protected void deleteResume(Object uuid) {
         storage.remove((String) uuid);
-    }
-
-    @Override
-    protected Object checkExistResume(String uuid) {
-        if (!storage.containsKey(uuid)) throw new NotExistStorageException(uuid);
-        return uuid;
-    }
-
-    @Override
-    protected Object checkNotExistResume(String uuid) {
-        if (storage.containsKey(uuid)) throw new ExistStorageException(uuid);
-        return uuid;
     }
 
     @Override
