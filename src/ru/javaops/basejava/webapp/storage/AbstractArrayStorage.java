@@ -13,6 +13,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
 
     @Override
+    protected boolean isExistSearchKey(Object searchKey) {
+        return (int) searchKey >= 0;
+    }
+
+    @Override
     public final void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;

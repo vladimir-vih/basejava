@@ -26,6 +26,11 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
+    protected boolean isExistSearchKey(Object searchKey) {
+        return (int) searchKey >= 0;
+    }
+
+    @Override
     protected void updateResume(Object index, Resume r) {
         storage.set((int) index, r);
     }

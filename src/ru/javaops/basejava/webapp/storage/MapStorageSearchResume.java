@@ -12,8 +12,12 @@ public class MapStorageSearchResume extends AbstractStorage{
 
     @Override
     protected Object findSearchKey(String uuid) {
-        Resume resume = storage.get(uuid);
-        return resume == null ? -1 : resume ;
+        return storage.get(uuid);
+    }
+
+    @Override
+    protected boolean isExistSearchKey(Object searchKey) {
+        return searchKey != null;
     }
 
     @Override
