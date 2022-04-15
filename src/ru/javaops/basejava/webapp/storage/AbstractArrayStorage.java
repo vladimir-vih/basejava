@@ -6,8 +6,10 @@ import ru.javaops.basejava.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
+    private static final Logger log = Logger.getLogger(AbstractArrayStorage.class.getName());
     protected static final int STORAGE_LIMIT = 10000;
     protected int size = 0;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -21,7 +23,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     public final void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
-        System.out.println("Storage was cleared successfully");
+        log.info("Storage was cleared successfully");
     }
 
     protected abstract void saveToArray(int indexResume, Resume r);
