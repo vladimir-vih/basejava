@@ -2,31 +2,29 @@ package ru.javaops.basejava.webapp.model;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static ru.javaops.basejava.webapp.model.ContactType.*;
 import static ru.javaops.basejava.webapp.model.SectionType.*;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        Resume testResume = new Resume("Григорий Кислин");
+        Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+        contacts.put(MOB_NUMBER, "+7(921) 855-0482");
+        contacts.put(SKYPE, "skype:grigory.kislin");
+        contacts.put(MAIL, "gkislin@yandex.ru");
+        contacts.put(LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        contacts.put(GIT_HUB, "https://github.com/gkislin");
+        contacts.put(STACK_OVERFLOW, "https://stackoverflow.com/users/548473");
+        contacts.put(HOMEPAGE, "http://gkislin.ru/");
 
-        testResume.updateContact(MOB_NUMBER, "+7(921) 855-0482");
-        testResume.updateContact(SKYPE, "skype:grigory.kislin");
-        testResume.updateContact(MAIL, "gkislin@yandex.ru");
-        testResume.updateContact(LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        testResume.updateContact(GIT_HUB, "https://github.com/gkislin");
-        testResume.updateContact(STACK_OVERFLOW, "https://stackoverflow.com/users/548473");
-        testResume.updateContact(HOMEPAGE, "http://gkislin.ru/");
+        Map<SectionType, Section<?>> sections = new EnumMap<>(SectionType.class);
 
-        testResume.updateSection(PERSONAL, new CharacteristicSection(
+        sections.put(PERSONAL, new CharacteristicSection(
                 "Аналитический склад ума, сильная логика, креативность, инициативность. " +
                         "Пурист кода и архитектуры."));
 
-        testResume.updateSection(OBJECTIVE, new CharacteristicSection(
+        sections.put(OBJECTIVE, new CharacteristicSection(
                 "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
 
         List<String> achievementsList = new ArrayList<>();
@@ -52,7 +50,7 @@ public class ResumeTestData {
                 "Реализация онлайн клиента для администрирования и мониторинга системы по JMX (Jython/ Django).");
         achievementsList.add("Реализация протоколов по приему платежей всех основных платежных системы России " +
                 "(Cyberplat, Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа.");
-        testResume.updateSection(ACHIEVEMENT, new SkillsSection(achievementsList));
+        sections.put(ACHIEVEMENT, new SkillsSection(achievementsList));
 
         List<String> qualificationList = new ArrayList<>();
         qualificationList.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
@@ -76,7 +74,7 @@ public class ResumeTestData {
         qualificationList.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, " +
                 "архитектурных шаблонов, UML, функционального программирования");
         qualificationList.add("Родной русский, английский \"upper intermediate\"");
-        testResume.updateSection(QUALIFICATIONS, new SkillsSection(qualificationList));
+        sections.put(QUALIFICATIONS, new SkillsSection(qualificationList));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
 
@@ -172,7 +170,7 @@ public class ResumeTestData {
         jobList.add(job8);
 
         Collections.sort(jobList);
-        testResume.updateSection(EXPERIENCE, new ExperienceSection(jobList));
+        sections.put(EXPERIENCE, new ExperienceSection(jobList));
 
         List<Experience> educationList = new LinkedList<>();
 
@@ -201,8 +199,9 @@ public class ResumeTestData {
         educationList.add(education3);
 
         Collections.sort(educationList);
-        testResume.updateSection(EDUCATION, new ExperienceSection(educationList));
+        sections.put(EDUCATION, new ExperienceSection(educationList));
 
+        Resume testResume = new Resume(UUID.randomUUID().toString(), "Григорий Кислин", contacts, sections);
         System.out.println(testResume);
     }
 }

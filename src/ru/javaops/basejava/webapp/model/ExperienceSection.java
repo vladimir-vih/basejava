@@ -3,9 +3,7 @@ package ru.javaops.basejava.webapp.model;
 import java.util.List;
 
 public class ExperienceSection implements Section<List<Experience>>{
-    private List<Experience> body;
-
-    ExperienceSection(){}
+    private final List<Experience> body;
 
     ExperienceSection(List<Experience> list) {
         this.body = list;
@@ -14,11 +12,6 @@ public class ExperienceSection implements Section<List<Experience>>{
     @Override
     public List<Experience> getBody() {
         return body;
-    }
-
-    @Override
-    public void updateBody(List<Experience> body) {
-        this.body = body;
     }
 
     @Override

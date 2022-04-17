@@ -2,6 +2,7 @@ package ru.javaops.basejava.webapp.model;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -10,17 +11,22 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume>{
     private String uuid;
     private final String fullName;
-    private final EnumMap<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-    private final EnumMap<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    private final Map<ContactType, String> contacts;
+    private final Map<SectionType, Section<?>> sections;
 
-
-    public Resume(String fullName) {
-        this(UUID.randomUUID().toString(), fullName);
+    public Resume(String uuid, String fullName, Map<ContactType, String> contacts, Map<SectionType, Section<?>> sections) {
+        this.uuid = uuid;
+        this.fullName = fullName;
+        this.contacts = contacts;
+        this.sections = sections;
     }
 
     public Resume(String uuid, String fullName) {
-        this.uuid = uuid;
-        this.fullName = fullName;
+        this(uuid, fullName, new EnumMap<>(ContactType.class), new EnumMap<>(SectionType.class));
+    }
+
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public String getUuid() {
@@ -39,16 +45,8 @@ public class Resume implements Comparable<Resume>{
         return contacts.get(contactName);
     }
 
-    public Section getSection(SectionType sectionName) {
+    public Section<?> getSection(SectionType sectionName) {
         return sections.get(sectionName);
-    }
-
-    public void updateContact(ContactType contactName, String contact) {
-        contacts.put(contactName, contact);
-    }
-
-    public void updateSection(SectionType sectionName, Section section) {
-        sections.put(sectionName, section);
     }
 
     @Override
@@ -56,12 +54,15 @@ public class Resume implements Comparable<Resume>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid)&&fullName.equals(resume.fullName);
+        return getUuid().equals(resume.getUuid())
+                && getFullName().equals(resume.getFullName())
+                && Objects.equals(contacts, resume.contacts)
+                && Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return Objects.hash(getUuid(), getFullName(), contacts, sections);
     }
 
     @Override
@@ -72,7 +73,7 @@ public class Resume implements Comparable<Resume>{
                     .append(entry.getValue()).append("\n");
         }
         final StringBuilder sectionsStringBuilder = new StringBuilder();
-        for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+        for (Map.Entry<SectionType, Section<?>> entry : sections.entrySet()) {
             sectionsStringBuilder.append("\n========================================================\n")
                             .append(entry.getKey().getTitle()).append(": ")
                             .append(entry.getValue().toString())

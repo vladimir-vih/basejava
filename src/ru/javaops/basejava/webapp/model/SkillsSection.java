@@ -1,12 +1,9 @@
 package ru.javaops.basejava.webapp.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SkillsSection implements Section<List<String>>{
-    private List<String> body = new ArrayList<>();
-
-    SkillsSection(){}
+    private final List<String> body;
 
     SkillsSection(List<String> list) {
         this.body = list;
@@ -15,11 +12,6 @@ public class SkillsSection implements Section<List<String>>{
     @Override
     public List<String> getBody() {
         return body;
-    }
-
-    @Override
-    public void updateBody(List<String> body) {
-        this.body = body;
     }
 
     @Override

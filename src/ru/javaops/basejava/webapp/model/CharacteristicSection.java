@@ -1,9 +1,7 @@
 package ru.javaops.basejava.webapp.model;
 
 public class CharacteristicSection implements Section<String>{
-    private String body;
-
-    CharacteristicSection() {}
+    private final String body;
 
     CharacteristicSection(String body) {
         this.body = body;
@@ -12,11 +10,6 @@ public class CharacteristicSection implements Section<String>{
     @Override
     public String getBody() {
         return body;
-    }
-
-    @Override
-    public void updateBody(String s) {
-        body = s;
     }
 
     @Override
