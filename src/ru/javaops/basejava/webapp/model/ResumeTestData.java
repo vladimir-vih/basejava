@@ -8,23 +8,24 @@ import static ru.javaops.basejava.webapp.model.ContactType.*;
 import static ru.javaops.basejava.webapp.model.SectionType.*;
 
 public class ResumeTestData {
-    public static void main(String[] args) {
-        Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-        contacts.put(MOB_NUMBER, "+7(921) 855-0482");
-        contacts.put(SKYPE, "skype:grigory.kislin");
-        contacts.put(MAIL, "gkislin@yandex.ru");
-        contacts.put(LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        contacts.put(GIT_HUB, "https://github.com/gkislin");
-        contacts.put(STACK_OVERFLOW, "https://stackoverflow.com/users/548473");
-        contacts.put(HOMEPAGE, "http://gkislin.ru/");
+    static final Map<ContactType, String> CONTACTS = new EnumMap<>(ContactType.class);
+    static {
+        CONTACTS.put(MOB_NUMBER, "+7(921) 855-0482");
+        CONTACTS.put(SKYPE, "skype:grigory.kislin");
+        CONTACTS.put(MAIL, "gkislin@yandex.ru");
+        CONTACTS.put(LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        CONTACTS.put(GIT_HUB, "https://github.com/gkislin");
+        CONTACTS.put(STACK_OVERFLOW, "https://stackoverflow.com/users/548473");
+        CONTACTS.put(HOMEPAGE, "http://gkislin.ru/");
+    }
 
-        Map<SectionType, Section<?>> sections = new EnumMap<>(SectionType.class);
-
-        sections.put(PERSONAL, new CharacteristicSection(
+    static final Map<SectionType, Section<?>> SECTIONS = new EnumMap<>(SectionType.class);
+    static {
+        SECTIONS.put(PERSONAL, new CharacteristicSection(
                 "Аналитический склад ума, сильная логика, креативность, инициативность. " +
                         "Пурист кода и архитектуры."));
 
-        sections.put(OBJECTIVE, new CharacteristicSection(
+        SECTIONS.put(OBJECTIVE, new CharacteristicSection(
                 "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
 
         List<String> achievementsList = new ArrayList<>();
@@ -50,7 +51,7 @@ public class ResumeTestData {
                 "Реализация онлайн клиента для администрирования и мониторинга системы по JMX (Jython/ Django).");
         achievementsList.add("Реализация протоколов по приему платежей всех основных платежных системы России " +
                 "(Cyberplat, Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа.");
-        sections.put(ACHIEVEMENT, new SkillsSection(achievementsList));
+        SECTIONS.put(ACHIEVEMENT, new SkillsSection(achievementsList));
 
         List<String> qualificationList = new ArrayList<>();
         qualificationList.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
@@ -74,134 +75,147 @@ public class ResumeTestData {
         qualificationList.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, " +
                 "архитектурных шаблонов, UML, функционального программирования");
         qualificationList.add("Родной русский, английский \"upper intermediate\"");
-        sections.put(QUALIFICATIONS, new SkillsSection(qualificationList));
+        SECTIONS.put(QUALIFICATIONS, new SkillsSection(qualificationList));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
 
         List<Experience> jobList = new LinkedList<>();
 
-        Experience job1 = new Experience();
-        job1.setCompanyName("Java Online Projects");
-        job1.setCompanyUrl("http://javaops.ru/");
-        job1.setStartDate(YearMonth.parse("10/2013", formatter).atDay(1));
-        job1.setCurrentPosition(true);
-        job1.setShortInfo("Автор проекта.");
-        job1.setDetailedInfo("Создание, организация и проведение Java онлайн проектов и стажировок.");
+        final Link javaOpsLink = new Link("JavaOps", "http://javaops.ru/");
+        final Company javaOps = new Company("Java Online Projects", javaOpsLink);
+        Experience job1 = new Experience(javaOps, YearMonth.parse("10/2013", formatter).atDay(1), null,
+                "Автор проекта.",
+                "Создание, организация и проведение Java онлайн проектов и стажировок.",
+                true);
         jobList.add(job1);
 
-        Experience job2 = new Experience();
-        job2.setCompanyName("Wrike");
-        job2.setCompanyUrl("https://www.wrike.com/");
-        job2.setStartDate(YearMonth.parse("10/2014", formatter).atDay(1));
-        job2.setEndDate(YearMonth.parse("01/2016", formatter).atDay(1));
-        job2.setShortInfo("Старший разработчик (backend)");
-        job2.setDetailedInfo("Проектирование и разработка онлайн платформы управления проектами Wrike " +
-                "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
-                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+        final Link wrikeLink = new Link("Wrike", "https://www.wrike.com/");
+        final Company wrike = new Company("Wrike", wrikeLink);
+        Experience job2 = new Experience(wrike, YearMonth.parse("10/2014", formatter).atDay(1),
+                YearMonth.parse("01/2016", formatter).atDay(1),
+                "Старший разработчик (backend)",
+                "Проектирование и разработка онлайн платформы управления проектами Wrike " +
+                        "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
+                        "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
         jobList.add(job2);
 
-        Experience job3 = new Experience();
-        job3.setCompanyName("RIT Center");
-        job3.setStartDate(YearMonth.parse("04/2012", formatter).atDay(1));
-        job3.setEndDate(YearMonth.parse("10/2014", formatter).atDay(1));
-        job3.setShortInfo("Java архитектор");
-        job3.setDetailedInfo("Организация процесса разработки системы ERP для разных окружений: релизная политика, " +
-                "версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), " +
-                "конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. " +
-                "Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), " +
-                "сервисов общего назначения (почта, экспорт в pdf, doc, html). " +
-                "Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. " +
-                "Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, " +
-                "OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python");
+        final Company ritCenter = new Company("RIT Center");
+        Experience job3 = new Experience(ritCenter, YearMonth.parse("04/2012", formatter).atDay(1),
+                YearMonth.parse("10/2014", formatter).atDay(1),
+                "Java архитектор",
+                "Организация процесса разработки системы ERP для разных окружений: релизная политика, " +
+                        "версионирование, ведение CI (Jenkins), миграция базы (кастомизация Flyway), " +
+                        "конфигурирование системы (pgBoucer, Nginx), AAA via SSO. Архитектура БД и серверной части системы. " +
+                        "Разработка интергационных сервисов: CMIS, BPMN2, 1C (WebServices), " +
+                        "сервисов общего назначения (почта, экспорт в pdf, doc, html). " +
+                        "Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. " +
+                        "Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, xcmis, " +
+                        "OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python");
         jobList.add(job3);
 
-        Experience job4 = new Experience();
-        job4.setCompanyName("Luxoft (Deutsche Bank)");
-        job4.setCompanyUrl("http://www.luxoft.ru/");
-        job4.setStartDate(YearMonth.parse("12/2010", formatter).atDay(1));
-        job4.setEndDate(YearMonth.parse("04/2012", formatter).atDay(1));
-        job4.setShortInfo("Ведущий программист");
-        job4.setDetailedInfo("Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, " +
-                "SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. " +
-                "Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области " +
-                "алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5.");
+        final Link luxoftLink = new Link("Luxoft", "http://www.luxoft.ru/");
+        final Company luxoft = new Company("Luxoft (Deutsche Bank)", luxoftLink);
+        Experience job4 = new Experience(luxoft, YearMonth.parse("12/2010", formatter).atDay(1),
+                YearMonth.parse("04/2012", formatter).atDay(1),
+                "Ведущий программист",
+                "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, Spring, Spring MVC, " +
+                        "SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной части CRM. " +
+                        "Реализация RIA-приложения для администрирования, мониторинга и анализа результатов в области " +
+                        "алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Highstock, Commet, HTML5.");
         jobList.add(job4);
 
-        Experience job5 = new Experience();
-        job5.setCompanyName("Yota");
-        job5.setCompanyUrl("https://www.yota.ru/");
-        job5.setStartDate(YearMonth.parse("06/2008", formatter).atDay(1));
-        job5.setEndDate(YearMonth.parse("12/2010", formatter).atDay(1));
-        job5.setShortInfo("Ведущий специалист");
-        job5.setDetailedInfo("Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" " +
-                "(GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). " +
-                "Реализация администрирования, статистики и мониторинга фреймворка. " +
-                "Разработка online JMX клиента (Python/ Jython, Django, ExtJS)");
+        final Link yotatLink = new Link("Yota", "https://www.yota.ru/");
+        final Company yota = new Company("Yota", yotatLink);
+        Experience job5 = new Experience(yota, YearMonth.parse("06/2008", formatter).atDay(1),
+                YearMonth.parse("12/2010", formatter).atDay(1),
+                "Ведущий специалист",
+                "Дизайн и имплементация Java EE фреймворка для отдела \"Платежные Системы\" " +
+                        "(GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, JMX, JMS, Maven2). " +
+                        "Реализация администрирования, статистики и мониторинга фреймворка. " +
+                        "Разработка online JMX клиента (Python/ Jython, Django, ExtJS)");
         jobList.add(job5);
 
-        Experience job6 = new Experience();
-        job6.setCompanyName("Enkata");
-        job6.setCompanyUrl("http://enkata.com/");
-        job6.setStartDate(YearMonth.parse("03/2007", formatter).atDay(1));
-        job6.setEndDate(YearMonth.parse("06/2008", formatter).atDay(1));
-        job6.setShortInfo("Разработчик ПО");
-        job6.setDetailedInfo("Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, " +
-                "Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining).");
+        final Link enkantaLink = new Link("Enkata", "http://enkata.com/");
+        final Company enkanta = new Company("Enkata", enkantaLink);
+        Experience job6 = new Experience(enkanta, YearMonth.parse("03/2007", formatter).atDay(1),
+                YearMonth.parse("06/2008", formatter).atDay(1),
+                "Разработчик ПО",
+                "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, " +
+                        "Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining).");
         jobList.add(job6);
 
-        Experience job7 = new Experience();
-        job7.setCompanyName("Siemens AG");
-        job7.setCompanyUrl("https://www.siemens.com/ru/ru/home.html");
-        job7.setStartDate(YearMonth.parse("01/2005", formatter).atDay(1));
-        job7.setEndDate(YearMonth.parse("02/2007", formatter).atDay(1));
-        job7.setShortInfo("Разработчик ПО");
-        job7.setDetailedInfo("Разработка информационной модели, проектирование интерфейсов, " +
-                "реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix).");
+        final Link siemensLink = new Link("Siemens AG", "https://www.siemens.com/ru/ru/home.html");
+        final Company siemens = new Company("Siemens AG", siemensLink);
+        Experience job7 = new Experience(siemens, YearMonth.parse("01/2005", formatter).atDay(1),
+                YearMonth.parse("02/2007", formatter).atDay(1),
+                "Разработчик ПО",
+                "Разработка информационной модели, проектирование интерфейсов, " +
+                        "реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix).");
         jobList.add(job7);
 
-        Experience job8 = new Experience();
-        job8.setCompanyName("Alcatel");
-        job8.setCompanyUrl("http://www.alcatel.ru/");
-        job8.setStartDate(YearMonth.parse("09/1997", formatter).atDay(1));
-        job8.setEndDate(YearMonth.parse("01/2005", formatter).atDay(1));
-        job8.setShortInfo("Инженер по аппаратному и программному тестированию");
-        job8.setDetailedInfo("Тестирование, отладка, внедрение ПО цифровой телефонной станции " +
-                "Alcatel 1000 S12 (CHILL, ASM).");
+        final Link alcatelLink = new Link("Alcatel", "http://www.alcatel.ru/");
+        final Company alcatel = new Company("Alcatel", alcatelLink);
+        Experience job8 = new Experience(alcatel, YearMonth.parse("09/1997", formatter).atDay(1),
+                YearMonth.parse("01/2005", formatter).atDay(1),
+                "Инженер по аппаратному и программному тестированию",
+                "Тестирование, отладка, внедрение ПО цифровой телефонной станции " +
+                        "Alcatel 1000 S12 (CHILL, ASM).");
         jobList.add(job8);
 
         Collections.sort(jobList);
-        sections.put(EXPERIENCE, new ExperienceSection(jobList));
+        SECTIONS.put(EXPERIENCE, new ExperienceSection(jobList));
 
         List<Experience> educationList = new LinkedList<>();
 
-        Experience education1 = new Experience();
-        education1.setCompanyName("Coursera");
-        education1.setCompanyUrl("https://www.coursera.org/course/progfun");
-        education1.setStartDate(YearMonth.parse("03/2013", formatter).atDay(1));
-        education1.setEndDate(YearMonth.parse("05/2013", formatter).atDay(1));
-        education1.setShortInfo("'Functional Programming Principles in Scala' by Martin Odersky");
+        final Link courseraLink = new Link("Coursera", "https://www.coursera.org/course/progfun");
+        final Company coursera = new Company("Coursera", courseraLink);
+        Experience education1 = new Experience(coursera, YearMonth.parse("03/2013", formatter).atDay(1),
+                YearMonth.parse("05/2013", formatter).atDay(1),
+                "'Functional Programming Principles in Scala' by Martin Odersky");
         educationList.add(education1);
 
-        Experience education2 = new Experience();
-        education2.setCompanyName("Luxoft");
-        education2.setCompanyUrl("http://www.luxoft-training.ru/training/catalog/course.html?ID=22366");
-        education2.setStartDate(YearMonth.parse("03/2011", formatter).atDay(1));
-        education2.setEndDate(YearMonth.parse("04/2011", formatter).atDay(1));
-        education2.setShortInfo("Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'");
+        Experience education2 = new Experience(luxoft, YearMonth.parse("03/2011", formatter).atDay(1),
+                YearMonth.parse("04/2011", formatter).atDay(1),
+                "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'");
         educationList.add(education2);
 
-        Experience education3 = new Experience();
-        education3.setCompanyName("Siemens AG");
-        education3.setCompanyUrl("http://www.siemens.ru/");
-        education3.setStartDate(YearMonth.parse("01/2005", formatter).atDay(1));
-        education3.setEndDate(YearMonth.parse("04/2005", formatter).atDay(1));
-        education3.setShortInfo("3 месяца обучения мобильным IN сетям (Берлин)");
+        Experience education3 = new Experience(siemens, YearMonth.parse("01/2005", formatter).atDay(1),
+                YearMonth.parse("04/2005", formatter).atDay(1),
+                "3 месяца обучения мобильным IN сетям (Берлин)");
         educationList.add(education3);
 
-        Collections.sort(educationList);
-        sections.put(EDUCATION, new ExperienceSection(educationList));
+        final Link ifmoLink = new Link("Санкт-Петербургский национальный исследовательский университет " +
+                "информационных технологий, механики и оптики", "http://www.ifmo.ru/");
+        final Company ifmo = new Company("Санкт-Петербургский национальный исследовательский университет " +
+                "информационных технологий, механики и оптики", ifmoLink);
+        Experience education4 = new Experience(ifmo, YearMonth.parse("09/1993", formatter).atDay(1),
+                YearMonth.parse("07/1996", formatter).atDay(1),
+                "Аспирантура (программист С, С++)");
+        educationList.add(education4);
 
-        Resume testResume = new Resume(UUID.randomUUID().toString(), "Григорий Кислин", contacts, sections);
+        Experience education5 = new Experience(ifmo, YearMonth.parse("09/1987", formatter).atDay(1),
+                YearMonth.parse("07/1993", formatter).atDay(1),
+                "Инженер (программист Fortran, C)");
+        educationList.add(education5);
+
+        final Link miptLink = new Link("Заочная физико-техническая школа при МФТИ",
+                "http://www.school.mipt.ru/");
+        final Company mipt = new Company("Заочная физико-техническая школа при МФТИ",
+                miptLink);
+        Experience education6 = new Experience(mipt, YearMonth.parse("09/1984", formatter).atDay(1),
+                YearMonth.parse("06/1987", formatter).atDay(1),
+                "Аспирантура (программист С, С++)");
+        educationList.add(education6);
+
+        Collections.sort(educationList);
+        SECTIONS.put(EDUCATION, new ExperienceSection(educationList));
+    }
+    public static void main(String[] args) {
+        Resume testResume = new Resume(UUID.randomUUID().toString(), "Григорий Кислин", CONTACTS, SECTIONS);
         System.out.println(testResume);
+    }
+
+    public static Resume getInstance(String uuid, String fullname) {
+        return new Resume(uuid, fullname, CONTACTS, SECTIONS);
     }
 }

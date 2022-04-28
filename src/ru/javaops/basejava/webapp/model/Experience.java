@@ -5,68 +5,55 @@ import java.time.YearMonth;
 import java.util.Objects;
 
 public class Experience implements Comparable<Experience>{
-    private String companyName;
-    private String companyUrl;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String shortInfo;
-    private String detailedInfo;
-    private boolean currentPosition = false;
+    private final Company company;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
+    private final String shortInfo;
+    private final String detailedInfo;
+    private final boolean currentPosition;
 
-    public boolean isCurrentPosition() {
-        return currentPosition;
-    }
-
-    public void setCurrentPosition(boolean currentPosition) {
+    public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo,
+                      String detailedInfo, boolean currentPosition) {
+        this.company = company;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.shortInfo = shortInfo;
+        this.detailedInfo = detailedInfo;
         this.currentPosition = currentPosition;
     }
 
-    public String getCompanyUrl() {
-        return companyUrl;
+    public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo, String detailedInfo) {
+        this(company, startDate, endDate, shortInfo, detailedInfo, false);
     }
 
-    public void setCompanyUrl(String companyUrl) {
-        this.companyUrl = companyUrl;
+    public Experience(Company company, LocalDate startDate, String shortInfo, Boolean currentPosition) {
+        this(company, startDate, null, shortInfo, null, currentPosition);
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo) {
+        this(company, startDate, endDate, shortInfo, null, false);
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+
+
+    public boolean isCurrentPosition() {
+        return currentPosition;
     }
 
     public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     public LocalDate getEndDate() {
         return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
     }
 
     public String getShortInfo() {
         return shortInfo;
     }
 
-    public void setShortInfo(String shortInfo) {
-        this.shortInfo = shortInfo;
-    }
-
     public String getDetailedInfo() {
         return detailedInfo;
-    }
-
-    public void setDetailedInfo(String detailedInfo) {
-        this.detailedInfo = detailedInfo;
     }
 
     @Override
@@ -76,8 +63,7 @@ public class Experience implements Comparable<Experience>{
         if(currentPosition) {
             sb.append("по настоящее время");
         } else sb.append(YearMonth.from(endDate));
-        sb.append("\n").append("Название компании: ").append(companyName);
-        if(companyUrl != null) sb.append("\n").append("Web site компании: ").append(companyUrl);
+        sb.append("\n").append(company.toString());
         if(shortInfo != null) sb.append("\n").append(shortInfo);
         if(detailedInfo != null) sb.append("\n").append(detailedInfo);
         return sb.toString();
@@ -101,18 +87,11 @@ public class Experience implements Comparable<Experience>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Experience that = (Experience) o;
-        return currentPosition == that.currentPosition
-                && getCompanyName().equals(that.getCompanyName())
-                && Objects.equals(getCompanyUrl(), that.getCompanyUrl())
-                && Objects.equals(getStartDate(), that.getStartDate())
-                && Objects.equals(isCurrentPosition(), that.isCurrentPosition())
-                && Objects.equals(getEndDate(), that.getEndDate())
-                && Objects.equals(getShortInfo(), that.getShortInfo())
-                && Objects.equals(getDetailedInfo(), that.getDetailedInfo());
+        return isCurrentPosition() == that.isCurrentPosition() && company.equals(that.company) && getStartDate().equals(that.getStartDate()) && Objects.equals(getEndDate(), that.getEndDate()) && getShortInfo().equals(that.getShortInfo()) && Objects.equals(getDetailedInfo(), that.getDetailedInfo());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCompanyName(), getStartDate());
+        return Objects.hash(company, getStartDate(), getEndDate(), getShortInfo(), getDetailedInfo(), isCurrentPosition());
     }
 }

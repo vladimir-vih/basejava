@@ -7,39 +7,37 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class MapStorageSearchResume extends AbstractStorage{
+public class MapStorageSearchResume extends AbstractStorage<Resume>{
     private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
-    protected Object findSearchKey(String uuid) {
+    protected Resume findSearchKey(String uuid) {
         return storage.get(uuid);
     }
 
     @Override
-    protected boolean isExistSearchKey(Object searchKey) {
+    protected boolean isExistSearchKey(Resume searchKey) {
         return searchKey != null;
     }
 
     @Override
-    protected void saveResume(Object oldResume, Resume newResume) {
+    protected void saveResume(Resume oldResume, Resume newResume) {
         storage.put(newResume.getUuid(), newResume);
     }
 
     @Override
-    protected void updateResume(Object oldResume, Resume newResume) {
-        Resume resume = (Resume) oldResume;
-        storage.replace(resume.getUuid(), resume, newResume);
+    protected void updateResume(Resume oldResume, Resume newResume) {
+        storage.replace(oldResume.getUuid(), oldResume, newResume);
     }
 
     @Override
-    protected Resume getResume(Object resume) {
-        return (Resume) resume;
+    protected Resume getResume(Resume resume) {
+        return resume;
     }
 
     @Override
-    protected void deleteResume(Object oldResume) {
-        Resume resume = (Resume) oldResume;
-        storage.remove(resume.getUuid(), resume);
+    protected void deleteResume(Resume oldResume) {
+        storage.remove(oldResume.getUuid(), oldResume);
     }
 
     @Override

@@ -1,11 +1,13 @@
 package ru.javaops.basejava.webapp.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SkillsSection implements Section<List<String>>{
     private final List<String> body;
 
     SkillsSection(List<String> list) {
+        Objects.requireNonNull(list, "Section can't be null");
         this.body = list;
     }
 

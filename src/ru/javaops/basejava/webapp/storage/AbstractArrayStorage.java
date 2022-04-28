@@ -8,15 +8,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     private static final Logger log = Logger.getLogger(AbstractArrayStorage.class.getName());
     protected static final int STORAGE_LIMIT = 10000;
     protected int size = 0;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
 
     @Override
-    protected boolean isExistSearchKey(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExistSearchKey(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     @Override
@@ -29,42 +29,39 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void saveToArray(int indexResume, Resume r);
 
     @Override
-    protected final void saveResume(Object index, Resume r) {
-        final int indexResume = (int) index;
-
+    protected final void saveResume(Integer index, Resume r) {
         //Проверка что в storage есть свободное место
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("The storage is full", r.getUuid());
         }
 
         //Вставка в массив
-        if (indexResume >= -size - 1) {
-            if (indexResume == -size - 1) { //Проверка на вставку в конец массива
+        if (index >= -size - 1) {
+            if (index == -size - 1) { //Проверка на вставку в конец массива
                 storage[size] = r;
-            } else saveToArray(indexResume, r);
+            } else saveToArray(index, r);
             size++;
         }
     }
 
     @Override
-    protected final void updateResume(Object index, Resume r) {
-        storage[(int) index] = r;
+    protected final void updateResume(Integer index, Resume r) {
+        storage[index] = r;
     }
 
     @Override
-    protected final Resume getResume(Object index) {
-        return storage[(int) index];
+    protected final Resume getResume(Integer index) {
+        return storage[index];
     }
 
     protected abstract void shiftItemsLeft(int indexResume);
 
     @Override
-    protected final void deleteResume(Object index) {
-        final int indexResume = (int) index;
+    protected final void deleteResume(Integer index) {
         //Удаление из массива
-        if (indexResume <= size - 1) {
-            if (indexResume < size - 1) { //Проверка на удаление из конца массива
-                shiftItemsLeft(indexResume); //смещение элемента(ов) массива влево на указанный индекс
+        if (index <= size - 1) {
+            if (index < size - 1) { //Проверка на удаление из конца массива
+                shiftItemsLeft(index); //смещение элемента(ов) массива влево на указанный индекс
             }
             storage[size - 1] = null;
             size--;

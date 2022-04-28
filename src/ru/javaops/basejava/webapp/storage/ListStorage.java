@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
@@ -15,7 +15,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object findSearchKey(String uuid) {
+    protected Integer findSearchKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             Resume tempResume = storage.get(i);
             if (uuid.equals(tempResume.getUuid())) {
@@ -26,29 +26,28 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExistSearchKey(Object searchKey) {
-        return (int) searchKey >= 0;
+    protected boolean isExistSearchKey(Integer searchKey) {
+        return searchKey >= 0;
     }
 
     @Override
-    protected void updateResume(Object index, Resume r) {
-        storage.set((int) index, r);
+    protected void updateResume(Integer index, Resume r) {
+        storage.set(index, r);
     }
 
     @Override
-    protected final Resume getResume(Object index) {
-        return storage.get((int) index);
+    protected final Resume getResume(Integer index) {
+        return storage.get(index);
     }
 
     @Override
-    protected void saveResume(Object index, Resume r) {
+    protected void saveResume(Integer index, Resume r) {
         storage.add(r);
     }
 
     @Override
-    protected void deleteResume(Object index) {
-        final int indexResume = (int) index;
-        storage.remove(indexResume);
+    protected void deleteResume(Integer index) {
+        storage.remove((int) index);
     }
 
     @Override
