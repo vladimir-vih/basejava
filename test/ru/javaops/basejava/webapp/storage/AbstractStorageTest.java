@@ -2,10 +2,10 @@ package ru.javaops.basejava.webapp.storage;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.javaops.basejava.webapp.ResumeTestData;
 import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
-import ru.javaops.basejava.webapp.model.ResumeTestData;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,18 +13,14 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
-    protected Storage storage;
-
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
-
     private static final String FULL_NAME_1 = "FULLNAME1";
     private static final String FULL_NAME_2 = "FULLNAME2";
     private static final String FULL_NAME_3 = "FULLNAME3";
     private static final String FULL_NAME_4 = "FULLNAME4";
-
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
     private static final Resume RESUME_3;
@@ -36,6 +32,8 @@ public abstract class AbstractStorageTest {
         RESUME_3 = ResumeTestData.getInstance(UUID_3, FULL_NAME_3);
         RESUME_4 = ResumeTestData.getInstance(UUID_4, FULL_NAME_4);
     }
+
+    protected Storage storage;
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -82,20 +80,18 @@ public abstract class AbstractStorageTest {
     @Test
     public void getExist() {
         assertGet(RESUME_1);
-        assertSize(3);
-
     }
 
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() {
-        storage.get(RESUME_4.getUuid());
+        storage.get(UUID_4);
     }
 
     @Test
     public void deleteExist() {
-        storage.delete(RESUME_1.getUuid());
+        storage.delete(UUID_1);
         try {
-            storage.get(RESUME_1.getUuid());
+            storage.get(UUID_1);
             fail("Error! Get operation didn't throw exception during the test!");
         } catch (NotExistStorageException e) {
             assertSize(2);
@@ -104,7 +100,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void deleteNotExist() {
-        storage.delete(RESUME_4.getUuid());
+        storage.delete(UUID_4);
     }
 
     @Test

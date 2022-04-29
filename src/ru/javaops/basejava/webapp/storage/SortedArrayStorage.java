@@ -16,7 +16,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     protected final void saveToArray(int indexResume, Resume r) {
         final int insertIndex = -indexResume - 1;
         //смещение элементов массива вправо относительно индекса insertIndex
-        System.arraycopy(storage, insertIndex,storage,insertIndex + 1, size - insertIndex);
+        System.arraycopy(storage, insertIndex, storage, insertIndex + 1, size - insertIndex);
         //запись нового Resume в индекс insertIndex
         storage[insertIndex] = r;
     }

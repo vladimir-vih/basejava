@@ -1,4 +1,6 @@
-package ru.javaops.basejava.webapp.model;
+package ru.javaops.basejava.webapp;
+
+import ru.javaops.basejava.webapp.model.*;
 
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +11,8 @@ import static ru.javaops.basejava.webapp.model.SectionType.*;
 
 public class ResumeTestData {
     static final Map<ContactType, String> CONTACTS = new EnumMap<>(ContactType.class);
+    static final Map<SectionType, Section<?>> SECTIONS = new EnumMap<>(SectionType.class);
+
     static {
         CONTACTS.put(MOB_NUMBER, "+7(921) 855-0482");
         CONTACTS.put(SKYPE, "skype:grigory.kislin");
@@ -19,7 +23,6 @@ public class ResumeTestData {
         CONTACTS.put(HOMEPAGE, "http://gkislin.ru/");
     }
 
-    static final Map<SectionType, Section<?>> SECTIONS = new EnumMap<>(SectionType.class);
     static {
         SECTIONS.put(PERSONAL, new CharacteristicSection(
                 "Аналитический склад ума, сильная логика, креативность, инициативность. " +
@@ -210,6 +213,7 @@ public class ResumeTestData {
         Collections.sort(educationList);
         SECTIONS.put(EDUCATION, new ExperienceSection(educationList));
     }
+
     public static void main(String[] args) {
         Resume testResume = new Resume(UUID.randomUUID().toString(), "Григорий Кислин", CONTACTS, SECTIONS);
         System.out.println(testResume);

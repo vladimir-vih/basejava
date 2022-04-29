@@ -3,32 +3,32 @@ package ru.javaops.basejava.webapp.model;
 import java.util.Objects;
 
 public class Company {
-    private final String companyName;
-    private final Link companyUrl;
+    private final String name;
+    private final Link url;
 
-    Company(String name, Link url){
-        Objects.requireNonNull(name, "Company name can't be null");
-        this.companyName = name;
-        this.companyUrl = url;
-    }
-
-    Company(String name) {
+    public Company(String name) {
         this(name, null);
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public Company(String name, Link url) {
+        Objects.requireNonNull(name, "Company name can't be null");
+        this.name = name;
+        this.url = url;
     }
 
-    public Link getCompanyUrl() {
-        return companyUrl;
+    public String getName() {
+        return name;
+    }
+
+    public Link getUrl() {
+        return url;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(companyName);
-        if(companyUrl != null) sb.append("\n").append(companyUrl);
+        sb.append(name);
+        if (url != null) sb.append("\n").append(url);
         return sb.toString();
     }
 
@@ -37,11 +37,11 @@ public class Company {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Company company = (Company) o;
-        return getCompanyName().equals(company.getCompanyName()) && Objects.equals(getCompanyUrl(), company.getCompanyUrl());
+        return getName().equals(company.getName()) && Objects.equals(getUrl(), company.getUrl());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCompanyName());
+        return Objects.hash(getName());
     }
 }

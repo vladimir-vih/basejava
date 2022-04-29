@@ -11,7 +11,7 @@ public enum ContactType {
 
     private String title;
 
-    ContactType(String s){
+    ContactType(String s) {
         setTitle(s);
     }
 

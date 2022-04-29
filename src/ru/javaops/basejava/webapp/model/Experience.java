@@ -4,13 +4,21 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Objects;
 
-public class Experience implements Comparable<Experience>{
+public class Experience implements Comparable<Experience> {
     private final Company company;
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final String shortInfo;
     private final String detailedInfo;
     private final boolean currentPosition;
+
+    public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo) {
+        this(company, startDate, endDate, shortInfo, null, false);
+    }
+
+    public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo, String detailedInfo) {
+        this(company, startDate, endDate, shortInfo, detailedInfo, false);
+    }
 
     public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo,
                       String detailedInfo, boolean currentPosition) {
@@ -21,20 +29,6 @@ public class Experience implements Comparable<Experience>{
         this.detailedInfo = detailedInfo;
         this.currentPosition = currentPosition;
     }
-
-    public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo, String detailedInfo) {
-        this(company, startDate, endDate, shortInfo, detailedInfo, false);
-    }
-
-    public Experience(Company company, LocalDate startDate, String shortInfo, Boolean currentPosition) {
-        this(company, startDate, null, shortInfo, null, currentPosition);
-    }
-
-    public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo) {
-        this(company, startDate, endDate, shortInfo, null, false);
-    }
-
-
 
     public boolean isCurrentPosition() {
         return currentPosition;
@@ -57,15 +51,15 @@ public class Experience implements Comparable<Experience>{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("\n").append(YearMonth.from(startDate)).append(" - ");
-        if(currentPosition) {
+        if (currentPosition) {
             sb.append("по настоящее время");
         } else sb.append(YearMonth.from(endDate));
         sb.append("\n").append(company.toString());
-        if(shortInfo != null) sb.append("\n").append(shortInfo);
-        if(detailedInfo != null) sb.append("\n").append(detailedInfo);
+        if (shortInfo != null) sb.append("\n").append(shortInfo);
+        if (detailedInfo != null) sb.append("\n").append(detailedInfo);
         return sb.toString();
     }
 

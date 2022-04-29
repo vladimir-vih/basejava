@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
-    private static final Logger log = Logger.getLogger(AbstractArrayStorage.class.getName());
     protected static final int STORAGE_LIMIT = 10000;
+    private static final Logger log = Logger.getLogger(AbstractArrayStorage.class.getName());
     protected int size = 0;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
 
@@ -70,7 +70,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     protected List<Resume> getListResumes() {
-        return new LinkedList<>(Arrays.asList(Arrays.copyOf(storage,size)));
+        return new LinkedList<>(Arrays.asList(Arrays.copyOf(storage, size)));
     }
 
     @Override

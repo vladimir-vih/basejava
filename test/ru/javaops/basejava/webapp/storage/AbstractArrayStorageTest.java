@@ -18,8 +18,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
             for (int i = 3; i < STORAGE_LIMIT; i++) {
                 storage.save(new Resume("Any name"));
             }
-        }
-        catch (StorageException e) {
+        } catch (StorageException e) {
             fail("Storage exception occurs too early");
         }
         storage.save(new Resume("Any name"));

@@ -8,11 +8,19 @@ import java.util.UUID;
 /**
  * Initial resume class
  */
-public class Resume implements Comparable<Resume>{
-    private String uuid;
+public class Resume implements Comparable<Resume> {
     private final String fullName;
     private final Map<ContactType, String> contacts;
     private final Map<SectionType, Section<?>> sections;
+    private String uuid;
+
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(), fullName);
+    }
+
+    public Resume(String uuid, String fullName) {
+        this(uuid, fullName, new EnumMap<>(ContactType.class), new EnumMap<>(SectionType.class));
+    }
 
     public Resume(String uuid, String fullName, Map<ContactType, String> contacts, Map<SectionType, Section<?>> sections) {
         this.uuid = uuid;
@@ -21,24 +29,16 @@ public class Resume implements Comparable<Resume>{
         this.sections = new EnumMap<>(sections);
     }
 
-    public Resume(String uuid, String fullName) {
-        this(uuid, fullName, new EnumMap<>(ContactType.class), new EnumMap<>(SectionType.class));
-    }
-
-    public Resume(String fullName) {
-        this(UUID.randomUUID().toString(), fullName);
-    }
-
     public String getUuid() {
         return uuid;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public String getContact(ContactType contactName) {
@@ -68,16 +68,16 @@ public class Resume implements Comparable<Resume>{
     @Override
     public String toString() {
         final StringBuilder contactsStringBuilder = new StringBuilder();
-        for (Map.Entry<ContactType, String > entry : contacts.entrySet()) {
+        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
             contactsStringBuilder.append(entry.getKey().getTitle()).append(": ")
                     .append(entry.getValue()).append("\n");
         }
         final StringBuilder sectionsStringBuilder = new StringBuilder();
         for (Map.Entry<SectionType, Section<?>> entry : sections.entrySet()) {
             sectionsStringBuilder.append("\n========================================================\n")
-                            .append(entry.getKey().getTitle()).append(": ")
-                            .append(entry.getValue().toString())
-                            .append("\n========================================================\n");
+                    .append(entry.getKey().getTitle()).append(": ")
+                    .append(entry.getValue().toString())
+                    .append("\n========================================================\n");
         }
         return "ФИО: " + fullName + "\n" +
                 "Контакты:\n" + contactsStringBuilder +

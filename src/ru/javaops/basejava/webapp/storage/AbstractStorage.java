@@ -12,9 +12,10 @@ public abstract class AbstractStorage<SK> implements Storage {
     private static final Logger log = Logger.getLogger(AbstractStorage.class.getName());
 
     /**
-    findSearchKey method
-    @return negative int key if "uuid" is not found, otherwise it can return any Object type with the key.
-    */
+     * findSearchKey method
+     *
+     * @return negative int key if "uuid" is not found, otherwise it can return any Object type with the key.
+     */
 
     protected abstract SK findSearchKey(String uuid);
 
@@ -33,7 +34,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     @Override
     public final void update(Resume resume) {
         final String uuid = resume.getUuid();
-        final SK searchKey= receiveExistedSearchKey(uuid);
+        final SK searchKey = receiveExistedSearchKey(uuid);
         //Обновление резюме
         updateResume(searchKey, resume);
         log.info("Resume " + uuid + " was updated.");
@@ -74,7 +75,7 @@ public abstract class AbstractStorage<SK> implements Storage {
             log.warning("Resume " + uuid + ", already exists.");
             throw new ExistStorageException(uuid);
         }
-        return  searchKey;
+        return searchKey;
     }
 
     @Override
