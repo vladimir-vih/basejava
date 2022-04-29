@@ -86,15 +86,15 @@ public class ResumeTestData {
 
         final Link javaOpsLink = new Link("JavaOps", "http://javaops.ru/");
         final Company javaOps = new Company("Java Online Projects", javaOpsLink);
-        Experience job1 = new Experience(javaOps, YearMonth.parse("10/2013", formatter).atDay(1), null,
+        Experience job1 = new Experience(javaOps, YearMonth.parse("10/2013", formatter).atDay(1),
                 "Автор проекта.",
-                "Создание, организация и проведение Java онлайн проектов и стажировок.",
-                true);
+                "Создание, организация и проведение Java онлайн проектов и стажировок.");
         jobList.add(job1);
 
         final Link wrikeLink = new Link("Wrike", "https://www.wrike.com/");
         final Company wrike = new Company("Wrike", wrikeLink);
-        Experience job2 = new Experience(wrike, YearMonth.parse("10/2014", formatter).atDay(1),
+        Experience job2 = new Experience(wrike,
+                YearMonth.parse("10/2014", formatter).atDay(1),
                 YearMonth.parse("01/2016", formatter).atDay(1),
                 "Старший разработчик (backend)",
                 "Проектирование и разработка онлайн платформы управления проектами Wrike " +

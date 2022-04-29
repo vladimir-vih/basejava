@@ -10,28 +10,24 @@ public class Experience implements Comparable<Experience> {
     private final LocalDate endDate;
     private final String shortInfo;
     private final String detailedInfo;
-    private final boolean currentPosition;
 
     public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo) {
-        this(company, startDate, endDate, shortInfo, null, false);
+        this(company, startDate, endDate, shortInfo, null);
+    }
+
+    public Experience(Company company, LocalDate startDate, String shortInfo, String detailedInfo) {
+        this(company, startDate, LocalDate.MAX, shortInfo, detailedInfo);
     }
 
     public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo, String detailedInfo) {
-        this(company, startDate, endDate, shortInfo, detailedInfo, false);
-    }
-
-    public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo,
-                      String detailedInfo, boolean currentPosition) {
+        Objects.requireNonNull(company, "Company can't be null");
+        Objects.requireNonNull(startDate, "Start date can't be null");
+        Objects.requireNonNull(shortInfo, "Short info can't be null");
         this.company = company;
         this.startDate = startDate;
         this.endDate = endDate;
         this.shortInfo = shortInfo;
         this.detailedInfo = detailedInfo;
-        this.currentPosition = currentPosition;
-    }
-
-    public boolean isCurrentPosition() {
-        return currentPosition;
     }
 
     public LocalDate getStartDate() {
@@ -54,7 +50,7 @@ public class Experience implements Comparable<Experience> {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("\n").append(YearMonth.from(startDate)).append(" - ");
-        if (currentPosition) {
+        if (endDate.equals(LocalDate.MAX)) {
             sb.append("по настоящее время");
         } else sb.append(YearMonth.from(endDate));
         sb.append("\n").append(company.toString());
@@ -65,15 +61,19 @@ public class Experience implements Comparable<Experience> {
 
     @Override
     public int compareTo(Experience o) {
-        if (currentPosition && !o.currentPosition) {
+        if (this.isCurrentPosition() && !o.isCurrentPosition()) {
             return -1;
-        } else if (!currentPosition && o.currentPosition) {
+        } else if (!this.isCurrentPosition() && o.isCurrentPosition()) {
             return 1;
         } else {
             int i = startDate.compareTo(o.startDate);
             if (i != 0) i = -i; //reverse sort by startDate
             return i;
         }
+    }
+
+    private boolean isCurrentPosition() {
+        return endDate.equals(LocalDate.MAX);
     }
 
     @Override

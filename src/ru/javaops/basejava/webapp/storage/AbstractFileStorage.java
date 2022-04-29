@@ -33,10 +33,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveResume(File file, Resume r) {
         try {
             file.createNewFile();
-            doWrite(file, r);
         } catch (IOException | SecurityException e) {
-            throw new StorageException("Can't save file ", r.getUuid(), e);
+            throw new StorageException("Can't create new file ", r.getUuid(), e);
         }
+        updateResume(file, r);
     }
 
     protected abstract void doWrite(File file, Resume r) throws IOException;
