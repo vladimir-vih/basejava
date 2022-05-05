@@ -1,8 +1,9 @@
 package ru.javaops.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class CharacteristicSection implements Section<String> {
+public class CharacteristicSection implements Section<String>, Serializable {
     private final String body;
 
     public CharacteristicSection(String body) {
@@ -18,5 +19,18 @@ public class CharacteristicSection implements Section<String> {
     @Override
     public String toString() {
         return body;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CharacteristicSection that = (CharacteristicSection) o;
+        return getBody().equals(that.getBody());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBody());
     }
 }

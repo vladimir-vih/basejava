@@ -1,8 +1,9 @@
 package ru.javaops.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Company {
+public class Company implements Serializable {
     private final String name;
     private final Link url;
 

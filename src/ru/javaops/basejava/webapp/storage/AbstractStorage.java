@@ -5,6 +5,7 @@ import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -81,7 +82,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         log.info("Get all sorted");
-        List<Resume> resultList = getListResumes();
+        List<Resume> resultList = new LinkedList<>(getListResumes());
         resultList.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
         return resultList;
     }

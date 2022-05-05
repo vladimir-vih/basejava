@@ -1,5 +1,6 @@
 package ru.javaops.basejava.webapp.storage;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ru.javaops.basejava.webapp.ResumeTestData;
@@ -10,7 +11,8 @@ import ru.javaops.basejava.webapp.model.Resume;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public abstract class AbstractStorageTest {
     private static final String UUID_1 = "uuid1";
@@ -47,6 +49,11 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_3);
     }
 
+    @After
+    public void tearDown() {
+        storage.clear();
+    }
+
     @Test
     public void clear() {
         storage.clear();
@@ -69,7 +76,7 @@ public abstract class AbstractStorageTest {
     public void updateExist() {
         storage.update(RESUME_1);
         assertSize(3);
-        assertSame(RESUME_1, storage.get(RESUME_1.getUuid()));
+        assertEquals(RESUME_1, storage.get(UUID_1));
     }
 
     @Test(expected = NotExistStorageException.class)

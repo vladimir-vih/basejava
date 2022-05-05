@@ -1,10 +1,11 @@
 package ru.javaops.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Objects;
 
-public class Experience implements Comparable<Experience> {
+public class Experience implements Comparable<Experience>, Serializable {
     private final Company company;
     private final LocalDate startDate;
     private final LocalDate endDate;
@@ -81,11 +82,15 @@ public class Experience implements Comparable<Experience> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Experience that = (Experience) o;
-        return isCurrentPosition() == that.isCurrentPosition() && company.equals(that.company) && getStartDate().equals(that.getStartDate()) && Objects.equals(getEndDate(), that.getEndDate()) && getShortInfo().equals(that.getShortInfo()) && Objects.equals(getDetailedInfo(), that.getDetailedInfo());
+        return company.equals(that.company)
+                && getStartDate().equals(that.getStartDate())
+                && getEndDate().equals(that.getEndDate())
+                && getShortInfo().equals(that.getShortInfo())
+                && Objects.equals(getDetailedInfo(), that.getDetailedInfo());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(company, getStartDate(), getEndDate(), getShortInfo(), getDetailedInfo(), isCurrentPosition());
+        return Objects.hash(company, getStartDate(), getEndDate(), getShortInfo());
     }
 }

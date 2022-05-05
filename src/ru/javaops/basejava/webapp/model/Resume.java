@@ -1,5 +1,6 @@
 package ru.javaops.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
@@ -8,11 +9,11 @@ import java.util.UUID;
 /**
  * Initial resume class
  */
-public class Resume implements Comparable<Resume> {
+public class Resume implements Comparable<Resume>, Serializable {
     private final String fullName;
     private final Map<ContactType, String> contacts;
     private final Map<SectionType, Section<?>> sections;
-    private String uuid;
+    private final String uuid;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -33,10 +34,6 @@ public class Resume implements Comparable<Resume> {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
     public String getFullName() {
         return fullName;
     }
@@ -54,10 +51,10 @@ public class Resume implements Comparable<Resume> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return getUuid().equals(resume.getUuid())
-                && getFullName().equals(resume.getFullName())
+        return getFullName().equals(resume.getFullName())
                 && Objects.equals(contacts, resume.contacts)
-                && Objects.equals(sections, resume.sections);
+                && Objects.equals(sections, resume.sections)
+                && getUuid().equals(resume.getUuid());
     }
 
     @Override
