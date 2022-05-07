@@ -5,10 +5,9 @@ import ru.javaops.basejava.webapp.model.Resume;
 import ru.javaops.basejava.webapp.storage.serializestrategy.SerializeStrategy;
 
 import java.io.*;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class FileStorage extends AbstractStorage<File> {
     private final File directory;
@@ -86,37 +85,33 @@ public class FileStorage extends AbstractStorage<File> {
         } catch (SecurityException e) {
             throw new StorageException("Can't read ", file.getName(), e);
         }
-
     }
 
     @Override
     protected List<Resume> getListResumes() {
-        List<Resume> resumeList = new LinkedList<>();
-        proccessFiles(directory, file -> resumeList.add(getResume(file)));
+        List<Resume> resumeList = new ArrayList<>();
+        for (File file : getFilesArray()) {
+            resumeList.add(getResume(file));
+        }
         return resumeList;
     }
 
     @Override
     public void clear() {
-        proccessFiles(directory, this::deleteResume);
+        for (File file : getFilesArray()) {
+            deleteResume(file);
+        }
     }
 
     @Override
     public int size() {
-        return proccessFiles(directory, file -> {
-        });
+        return getFilesArray().length;
     }
 
-    private int proccessFiles(File dir, Consumer<File> consumer) {
-        String[] fileList = dir.list();
-        int count = 0;
-        if (fileList != null) {
-            for (String name : fileList) {
-                File file = new File(dir, name);
-                consumer.accept(file);
-                count++;
-            }
-        }
-        return count;
+    private File[] getFilesArray() {
+        File[] filesArray = directory.listFiles();
+        if (filesArray == null) {
+            throw new StorageException("Can't read directory " + directory.getName(), null);
+        } else return filesArray;
     }
 }
