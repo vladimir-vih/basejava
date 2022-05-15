@@ -1,10 +1,14 @@
 package ru.javaops.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Objects;
 
+@XmlRootElement
 public class CharacteristicSection implements Section<String>, Serializable {
-    private final String body;
+    private String body;
+
+    CharacteristicSection(){}
 
     public CharacteristicSection(String body) {
         Objects.requireNonNull(body, "Section can't be null");

@@ -1,5 +1,6 @@
 package ru.javaops.basejava.webapp.model;
 
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
@@ -9,11 +10,17 @@ import java.util.UUID;
 /**
  * Initial resume class
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlSeeAlso(EnumMap.class)
 public class Resume implements Comparable<Resume>, Serializable {
-    private final String fullName;
-    private final Map<ContactType, String> contacts;
-    private final Map<SectionType, Section<?>> sections;
-    private final String uuid;
+    private String fullName;
+    private Map<ContactType, String> contacts;
+    @XmlAnyElement
+    private Map<SectionType, Section<?>> sections;
+    private String uuid;
+
+    public Resume(){}
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -26,8 +33,8 @@ public class Resume implements Comparable<Resume>, Serializable {
     public Resume(String uuid, String fullName, Map<ContactType, String> contacts, Map<SectionType, Section<?>> sections) {
         this.uuid = uuid;
         this.fullName = fullName;
-        this.contacts = new EnumMap<>(contacts);
-        this.sections = new EnumMap<>(sections);
+        this.contacts = contacts;
+        this.sections = sections;
     }
 
     public String getUuid() {

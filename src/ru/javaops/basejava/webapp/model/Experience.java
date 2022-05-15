@@ -1,10 +1,13 @@
 package ru.javaops.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Experience implements Comparable<Experience>, Serializable {
     private final Company company;
     private final LocalDate startDate;

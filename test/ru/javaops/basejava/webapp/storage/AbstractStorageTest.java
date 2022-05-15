@@ -1,6 +1,5 @@
 package ru.javaops.basejava.webapp.storage;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ru.javaops.basejava.webapp.ResumeTestData;
@@ -49,10 +48,10 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_3);
     }
 
-    @After
+    /*@After
     public void tearDown() {
         storage.clear();
-    }
+    }*/
 
     @Test
     public void clear() {
