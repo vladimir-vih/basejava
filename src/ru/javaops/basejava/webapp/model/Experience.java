@@ -9,11 +9,14 @@ import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Experience implements Comparable<Experience>, Serializable {
-    private final Company company;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final String shortInfo;
-    private final String detailedInfo;
+    private Company company;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String shortInfo;
+    private String detailedInfo;
+
+    public Experience() {
+    }
 
     public Experience(Company company, LocalDate startDate, LocalDate endDate, String shortInfo) {
         this(company, startDate, endDate, shortInfo, null);
@@ -48,6 +51,10 @@ public class Experience implements Comparable<Experience>, Serializable {
 
     public String getDetailedInfo() {
         return detailedInfo;
+    }
+
+    public Company getCompany() {
+        return company;
     }
 
     @Override

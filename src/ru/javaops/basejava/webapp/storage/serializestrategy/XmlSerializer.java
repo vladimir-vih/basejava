@@ -10,7 +10,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class XmlSerializer implements SerializeStrategy{
+public class XmlSerializer implements SerializeStrategy {
     private final JAXBContext context;
     private final Marshaller marshaller;
     private final Unmarshaller unmarshaller;
@@ -24,7 +24,7 @@ public class XmlSerializer implements SerializeStrategy{
             this.marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             this.unmarshaller = context.createUnmarshaller();
         } catch (JAXBException e) {
-            throw new StorageException("Xml serialization error", null,e);
+            throw new StorageException("Xml serialization error", null, e);
         }
     }
 
@@ -33,7 +33,7 @@ public class XmlSerializer implements SerializeStrategy{
         try (Writer writer = new OutputStreamWriter(bos, StandardCharsets.UTF_8)) {
             marshaller.marshal(r, writer);
         } catch (JAXBException e) {
-            throw new StorageException("Xml serialization error", null,e);
+            throw new StorageException("Xml serialization error", null, e);
         }
     }
 
@@ -42,7 +42,7 @@ public class XmlSerializer implements SerializeStrategy{
         try (Reader reader = new InputStreamReader(bis, StandardCharsets.UTF_8)) {
             return (Resume) unmarshaller.unmarshal(reader);
         } catch (JAXBException e) {
-            throw new StorageException("Xml deserialization error", null,e);
+            throw new StorageException("Xml deserialization error", null, e);
         }
     }
 }

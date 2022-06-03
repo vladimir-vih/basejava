@@ -78,7 +78,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("Can't delete " + path,null,e);
+            throw new StorageException("Can't delete " + path, null, e);
         }
     }
 
@@ -101,12 +101,13 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        return processPaths(dir, path -> {});
+        return processPaths(dir, path -> {
+        });
     }
 
     private int processPaths(Path dir, Consumer<Path> consumer) {
         try (Stream<Path> stream = Files.list(dir)) {
-           return (int) stream.peek(consumer).count();
+            return (int) stream.peek(consumer).count();
         } catch (IOException e) {
             throw new StorageException("Can't read files", null, e);
         }

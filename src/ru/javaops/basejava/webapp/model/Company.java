@@ -7,8 +7,11 @@ import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Company implements Serializable {
-    private final String name;
-    private final Link url;
+    private String name;
+    private Link url;
+
+    public Company() {
+    }
 
     public Company(String name) {
         this(name, null);

@@ -11,7 +11,7 @@ import static ru.javaops.basejava.webapp.model.SectionType.*;
 
 public class ResumeTestData {
     static final Map<ContactType, String> CONTACTS = new EnumMap<>(ContactType.class);
-    static final Map<SectionType, Section<?>> SECTIONS = new EnumMap<>(SectionType.class);
+    static final Map<SectionType, Section> SECTIONS = new EnumMap<>(SectionType.class);
 
     static {
         CONTACTS.put(MOB_NUMBER, "+7(921) 855-0482");

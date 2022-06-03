@@ -11,7 +11,13 @@ import org.junit.runners.Suite;
         MapStorageTest.class,
         MapStorageSearchResumeTest.class,
         FileStorageObjectStreamStrategyTest.class,
-        PathStorageObjectStreamStrategyTest.class
+        PathStorageObjectStreamStrategyTest.class,
+        FileStorageXmlSerializerTest.class,
+        PathStorageXmlSerializerTest.class,
+        FileStorageJsonSerializerTest.class,
+        PathStorageJsonSerializerTest.class,
+        FileStorageDataStreamSerializerTest.class,
+        PathStorageDataStreamSerializerTest.class
 })
 public class AllStorageTest {
 }

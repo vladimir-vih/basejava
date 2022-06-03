@@ -1,15 +1,14 @@
 package ru.javaops.basejava.webapp.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-@XmlRootElement
 public class ExperienceSection implements Section<List<Experience>>, Serializable {
     private List<Experience> body;
 
-    ExperienceSection(){}
+    ExperienceSection() {
+    }
 
     public ExperienceSection(List<Experience> list) {
         Objects.requireNonNull(list, "Section can't be null");
