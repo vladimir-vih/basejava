@@ -23,22 +23,25 @@ public class DataStreamSerializer implements SerializeStrategy {
             Map<SectionType, Section> sections = r.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> sectionEntry : sections.entrySet()) {
-                dos.writeUTF(sectionEntry.getKey().name());
+                final SectionType sectionType = sectionEntry.getKey();
+                dos.writeUTF(sectionType.name());
                 final Section section = sectionEntry.getValue();
-                final String className = sectionEntry.getValue().getClass().getSimpleName();
-                dos.writeUTF(className);
-                switch (className) {
+                switch (sectionType.getClassType()) {
                     case ("CharacteristicSection"):
                         final Section<String> characteristicSection = (CharacteristicSection) section;
                         dos.writeUTF(characteristicSection.getBody());
                         break;
                     case ("SkillsSection"):
                         final Section<List<String>> skillsSection = (SkillsSection) section;
-                        serializeListSection(skillsSection, (String s, DataOutputStream y) -> y.writeUTF(s), dos);
+                        final List<String> skillsList = skillsSection.getBody();
+                        dos.writeInt(skillsList.size());
+                        for (String skill : skillsList) dos.writeUTF(skill);
                         break;
                     case ("ExperienceSection"):
                         final Section<List<Experience>> experienceSection = (ExperienceSection) section;
-                        serializeListSection(experienceSection, this::serializeExperience, dos);
+                        final List<Experience> experienceList = experienceSection.getBody();
+                        dos.writeInt(experienceList.size());
+                        for (Experience experience : experienceList) serializeExperience(experience, dos);
                         break;
                 }
             }
@@ -48,11 +51,13 @@ public class DataStreamSerializer implements SerializeStrategy {
     private void serializeExperience(Experience experience, DataOutputStream dos) throws IOException {
         final Company company = experience.getCompany();
         dos.writeUTF(company.getName());
-        serializeOptionalField(company.getUrl(), this::serializeLink, dos);
+        final Link companyLink = company.getUrl();
+        if (serializeOptionalFieldFlag(companyLink, dos)) serializeLink(companyLink, dos);
         dos.writeUTF(experience.getStartDate().toString());
         dos.writeUTF(experience.getEndDate().toString());
         dos.writeUTF(experience.getShortInfo());
-        serializeOptionalField(experience.getDetailedInfo(), (String s, DataOutputStream y) -> y.writeUTF(s), dos);
+        final String detailedInfo = experience.getDetailedInfo();
+        if (serializeOptionalFieldFlag(detailedInfo, dos)) dos.writeUTF(detailedInfo);
     }
 
     private void serializeLink(Link link, DataOutputStream dos) throws IOException {
@@ -60,25 +65,15 @@ public class DataStreamSerializer implements SerializeStrategy {
         dos.writeUTF(link.getUrl());
     }
 
-    private <T> void serializeListSection(Section<List<T>> section,
-                                          ThrowingObjectWriter<T, DataOutputStream, IOException> objectWriter,
-                                          DataOutputStream dos) throws IOException {
-        final List<T> list = section.getBody();
-        dos.writeInt(list.size());
-        for (T object : list) {
-            objectWriter.accept(object, dos);
-        }
-    }
-
-    private <T> void serializeOptionalField(T object,
-                                            ThrowingObjectWriter<T, DataOutputStream, IOException> objectWriter,
-                                            DataOutputStream dos) throws IOException {
+    private <T> boolean serializeOptionalFieldFlag(T object, DataOutputStream dos) throws IOException {
         if (object != null) {
             dos.writeInt(1);
-            objectWriter.accept(object, dos);
-        } else dos.writeInt(0);
+            return true;
+        } else  {
+            dos.writeInt(0);
+            return false;
+        }
     }
-
 
     @Override
     public Resume deserializeInputStream(BufferedInputStream bis) throws IOException {
@@ -93,18 +88,29 @@ public class DataStreamSerializer implements SerializeStrategy {
             }
             i = dis.readInt();
             while (i > 0) {
-                final String sectionName = dis.readUTF();
-                final String secionClassName = dis.readUTF();
-                switch (secionClassName) {
+                final SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                switch (sectionType.getClassType()) {
                     case ("CharacteristicSection"):
                         final Section<String> section = new CharacteristicSection(dis.readUTF());
-                        resume.addSection(SectionType.valueOf(sectionName), section);
+                        resume.addSection(sectionType, section);
                         break;
                     case ("SkillsSection"):
-                        resume.addSection(SectionType.valueOf(sectionName), new SkillsSection(deserializeList(DataInput::readUTF, dis)));
+                        int experienceListSize = dis.readInt();
+                        final List<String> skillsList = new ArrayList<>();
+                        while (experienceListSize > 0) {
+                            skillsList.add(dis.readUTF());
+                            experienceListSize--;
+                        }
+                        resume.addSection(sectionType, new SkillsSection(skillsList));
                         break;
                     case ("ExperienceSection"):
-                        resume.addSection(SectionType.valueOf(sectionName), new ExperienceSection(deserializeList(this::deserializeExperience, dis)));
+                        int skillsListSize = dis.readInt();
+                        final List<Experience> experienceList = new ArrayList<>();
+                        while (skillsListSize > 0) {
+                            experienceList.add(deserializeExperience(dis));
+                            skillsListSize--;
+                        }
+                        resume.addSection(sectionType, new ExperienceSection(experienceList));
                         break;
                 }
                 i--;
@@ -114,11 +120,13 @@ public class DataStreamSerializer implements SerializeStrategy {
     }
 
     private Experience deserializeExperience(DataInputStream dis) throws IOException {
-        final Company company = new Company(dis.readUTF(), deserializeOptionalField(this::deserializeLink, dis));
+        String companyName = dis.readUTF();
+        Link companyLink = existOptionalField(dis) ? deserializeLink(dis) : null;
+        final Company company = new Company(companyName, companyLink);
         final LocalDate startDate = LocalDate.parse(dis.readUTF());
         final LocalDate endDate = LocalDate.parse(dis.readUTF());
         final String shortInfo = dis.readUTF();
-        final String detailedInfo = deserializeOptionalField(DataInput::readUTF, dis);
+        final String detailedInfo = existOptionalField(dis) ? dis.readUTF() : null;
         return new Experience(company, startDate, endDate, shortInfo, detailedInfo);
     }
 
@@ -126,27 +134,7 @@ public class DataStreamSerializer implements SerializeStrategy {
         return new Link(dis.readUTF(), dis.readUTF());
     }
 
-    private <T> T deserializeOptionalField(ThrowingObjectReader<T, DataInputStream, IOException> objectReader, DataInputStream dis) throws IOException {
-        if (dis.readInt() == 1) {
-            return objectReader.accept(dis);
-        } else return null;
+    private <T> boolean existOptionalField(DataInputStream dis) throws IOException {
+        return dis.readInt() == 1;
     }
-
-    private <T> List<T> deserializeList(ThrowingObjectReader<T, DataInputStream, IOException> objectReader, DataInputStream dis) throws IOException {
-        int listSize = dis.readInt();
-        final List<T> list = new ArrayList<>();
-        while (listSize > 0) {
-            list.add(objectReader.accept(dis));
-            listSize--;
-        }
-        return list;
-    }
-}
-
-interface ThrowingObjectWriter<T, OutputStream, E extends Exception> {
-    void accept(T t, OutputStream outputStream) throws E;
-}
-
-interface ThrowingObjectReader<T, InputStream, E extends Exception> {
-    T accept(InputStream inputStream) throws E;
 }
