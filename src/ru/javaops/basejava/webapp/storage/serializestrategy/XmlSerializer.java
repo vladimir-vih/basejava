@@ -29,7 +29,7 @@ public class XmlSerializer implements SerializeStrategy {
     }
 
     @Override
-    public void serializeOutputStream(BufferedOutputStream bos, Resume r) throws IOException {
+    public void doWrite(BufferedOutputStream bos, Resume r) throws IOException {
         try (Writer writer = new OutputStreamWriter(bos, StandardCharsets.UTF_8)) {
             marshaller.marshal(r, writer);
         } catch (JAXBException e) {
@@ -38,7 +38,7 @@ public class XmlSerializer implements SerializeStrategy {
     }
 
     @Override
-    public Resume deserializeInputStream(BufferedInputStream bis) throws IOException {
+    public Resume doRead(BufferedInputStream bis) throws IOException {
         try (Reader reader = new InputStreamReader(bis, StandardCharsets.UTF_8)) {
             return (Resume) unmarshaller.unmarshal(reader);
         } catch (JAXBException e) {

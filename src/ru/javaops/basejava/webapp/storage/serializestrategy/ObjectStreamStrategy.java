@@ -8,14 +8,14 @@ import java.io.*;
 public class ObjectStreamStrategy implements SerializeStrategy {
 
     @Override
-    public void serializeOutputStream(BufferedOutputStream bos, Resume r) throws IOException {
+    public void doWrite(BufferedOutputStream bos, Resume r) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
             oos.writeObject(r);
         }
     }
 
     @Override
-    public Resume deserializeInputStream(BufferedInputStream bis) throws IOException {
+    public Resume doRead(BufferedInputStream bis) throws IOException {
         try (ObjectInputStream ois = new ObjectInputStream(bis)) {
             return (Resume) ois.readObject();
         } catch (ClassNotFoundException e) {

@@ -9,7 +9,7 @@ import java.io.*;
 
 public class JsonSerializer implements SerializeStrategy{
     @Override
-    public void serializeOutputStream(BufferedOutputStream bos, Resume r) throws IOException {
+    public void doWrite(BufferedOutputStream bos, Resume r) throws IOException {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(Section.class, new JsonSectionAdapter())
@@ -20,7 +20,7 @@ public class JsonSerializer implements SerializeStrategy{
     }
 
     @Override
-    public Resume deserializeInputStream(BufferedInputStream bis) throws IOException {
+    public Resume doRead(BufferedInputStream bis) throws IOException {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setPrettyPrinting();
         gsonBuilder.registerTypeAdapter(Section.class, new JsonSectionAdapter());

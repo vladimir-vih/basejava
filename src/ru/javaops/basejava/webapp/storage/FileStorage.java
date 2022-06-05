@@ -43,7 +43,7 @@ public class FileStorage extends AbstractStorage<File> {
     }
 
     protected void doWrite(File file, Resume r) throws IOException {
-        serializator.serializeOutputStream(new BufferedOutputStream(new FileOutputStream(file)), r);
+        serializator.doWrite(new BufferedOutputStream(new FileOutputStream(file)), r);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class FileStorage extends AbstractStorage<File> {
     }
 
     protected Resume doRead(File file) throws IOException {
-        return serializator.deserializeInputStream(new BufferedInputStream(new FileInputStream(file)));
+        return serializator.doRead(new BufferedInputStream(new FileInputStream(file)));
     }
 
     @Override

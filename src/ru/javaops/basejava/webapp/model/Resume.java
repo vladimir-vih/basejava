@@ -70,6 +70,14 @@ public class Resume implements Comparable<Resume>, Serializable {
         return sections.get(sectionName);
     }
 
+    public void setContacts(Map<ContactType, String> contacts) {
+        this.contacts = contacts;
+    }
+
+    public void setSections(Map<SectionType, Section> sections) {
+        this.sections = sections;
+    }
+
     public void addContact(ContactType type, String contact) {
         contacts.put(type, contact);
     }

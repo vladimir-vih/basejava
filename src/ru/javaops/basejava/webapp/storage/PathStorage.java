@@ -57,7 +57,7 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     protected void doWrite(Path path, Resume r) throws IOException {
-        serializator.serializeOutputStream(new BufferedOutputStream(Files.newOutputStream(path)), r);
+        serializator.doWrite(new BufferedOutputStream(Files.newOutputStream(path)), r);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     protected Resume doRead(Path path) throws IOException {
-        return serializator.deserializeInputStream(new BufferedInputStream(Files.newInputStream(path)));
+        return serializator.doRead(new BufferedInputStream(Files.newInputStream(path)));
     }
 
     @Override
