@@ -89,7 +89,7 @@ public class DataStreamSerializer implements SerializeStrategy {
             resume.setContacts(contacts);
 
             Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
-            readWithException(() -> sectionReader(sections,dis), dis);
+            readWithException(() -> sectionReader(sections, dis), dis);
             resume.setSections(sections);
             return resume;
         }
@@ -112,17 +112,21 @@ public class DataStreamSerializer implements SerializeStrategy {
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                final List<String> skillsList = new ArrayList<>();
-                readWithException(() -> skillsList.add(dis.readUTF()), dis);
-                map.put(sectionType, new SkillsSection(skillsList));
+                map.put(sectionType, new SkillsSection(readListWithException(dis::readUTF, dis)));
                 break;
             case EXPERIENCE:
             case EDUCATION:
-                final List<Experience> experienceList = new ArrayList<>();
-                readWithException(() -> experienceList.add(readExperience(dis)), dis);
-                map.put(sectionType, new ExperienceSection(experienceList));
+                map.put(sectionType, new ExperienceSection(readListWithException(() -> readExperience(dis), dis)));
                 break;
         }
+    }
+
+    private <T> List<T> readListWithException(ThrowingSupplier<T> supplier, DataInputStream dis) throws IOException {
+        List<T> list = new ArrayList<>();
+        for (int i = dis.readInt(); i > 0; i--) {
+            list.add(supplier.get());
+        }
+        return list;
     }
 
     private Experience readExperience(DataInputStream dis) throws IOException {
@@ -147,4 +151,8 @@ interface ThrowingObjectWriter<T> {
 
 interface ThrowingObjectReader {
     void read() throws IOException;
+}
+
+interface ThrowingSupplier<T> {
+    T get() throws IOException;
 }
