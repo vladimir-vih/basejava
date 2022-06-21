@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class MainStreamApiTask {
     private static final int ARRAY_SIZE = 5;
@@ -31,12 +30,10 @@ public class MainStreamApiTask {
      * Например {1,2,3,3,2,3} вернет 123, а {9,8} вернет 89
      * */
     private static int minValue(int[] values) {
-        AtomicReference<Integer> i = new AtomicReference<>(1);
         return Arrays.stream(values)
-                .boxed()
                 .distinct()
-                .sorted((Integer x, Integer y) -> Integer.compare(y, x))
-                .reduce(0,(x, y) -> x + y * i.getAndUpdate(z -> z * 10));
+                .sorted()
+                .reduce(0,(x, y) -> x * 10 + y);
     }
 
     /*
