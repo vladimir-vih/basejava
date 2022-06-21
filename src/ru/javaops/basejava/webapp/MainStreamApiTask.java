@@ -32,10 +32,11 @@ public class MainStreamApiTask {
      * */
     private static int minValue(int[] values) {
         AtomicReference<Integer> i = new AtomicReference<>(1);
-        return Arrays.stream(values).boxed().distinct()
+        return Arrays.stream(values)
+                .boxed()
+                .distinct()
                 .sorted((Integer x, Integer y) -> Integer.compare(y, x))
-                .mapToInt(x -> x * i.getAndUpdate(y -> y * 10))
-                .sum();
+                .reduce(0,(x, y) -> x + y * i.getAndUpdate(z -> z * 10));
     }
 
     /*
