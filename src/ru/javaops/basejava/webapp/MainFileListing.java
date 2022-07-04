@@ -9,7 +9,8 @@ public class MainFileListing {
     private static final String SUB_LEVEL = "|  ";
 
     public static void main(String[] args) {
-        final File dir = new File("./src/ru/javaops/basejava");
+//        final File dir = new File("./src/ru/javaops/basejava");
+        final File dir = new File("./config");
         try {
             System.out.println("Files listing for the directory: " + dir.getCanonicalPath());
         } catch (IOException e) {
