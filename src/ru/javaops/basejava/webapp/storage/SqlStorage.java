@@ -57,7 +57,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return (Resume) sqlHelper.executeStatement("SELECT full_name FROM resume WHERE uuid = ?",
+        return sqlHelper.executeStatement("SELECT full_name FROM resume WHERE uuid = ?",
                 ps -> {
                     ps.setString(1, uuid);
                     ResultSet rs = ps.executeQuery();
@@ -83,7 +83,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return (List<Resume>) sqlHelper.executeStatement("SELECT full_name, TRIM(TRAILING FROM uuid) uuid FROM resume ORDER BY full_name asc, uuid asc",
+        return sqlHelper.executeStatement("SELECT full_name, TRIM(TRAILING FROM uuid) uuid FROM resume ORDER BY full_name asc, uuid asc",
                 ps -> {
                     final List<Resume> resumeList = new LinkedList<>();
                     ResultSet rs = ps.executeQuery();
@@ -97,7 +97,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public int size() {
-        return (int) sqlHelper.executeStatement("SELECT COUNT(DISTINCT uuid) amount FROM resume",
+        return sqlHelper.executeStatement("SELECT COUNT(DISTINCT uuid) amount FROM resume",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
                     log.info("Calculated storage size.");

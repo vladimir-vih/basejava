@@ -23,8 +23,8 @@ public class SqlHelper {
                 DriverManager.getConnection(dbUrl,dbUser, dbPass);
     }
 
-    public Object executeStatement(String statementString,
-                                           ThrowingStatementExecutor<PreparedStatement> statementExecutor) {
+    public <T> T executeStatement(String statementString,
+                                           ThrowingStatementExecutor<T> statementExecutor) {
         try (Connection conn = connectionFactory.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(statementString);
             return statementExecutor.execute(ps);
