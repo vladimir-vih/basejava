@@ -8,6 +8,6 @@ public class SqlStorageTest extends AbstractStorageTest {
     private static final String dbPass = Config.getInstance().getDbPass();
 
     public SqlStorageTest() {
-        super(new SqlStorage(dbUrl, dbUser, dbPass));
+        super(Config.getInstance().getSqlStorage());
     }
 }
