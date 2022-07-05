@@ -2,7 +2,6 @@ package ru.javaops.basejava.webapp.storage.sql;
 
 import org.postgresql.util.PSQLException;
 import org.postgresql.util.ServerErrorMessage;
-import ru.javaops.basejava.webapp.Config;
 import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.StorageException;
 
@@ -12,26 +11,29 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SqlHelper {
-    static {
+    private final ConnectionFactory connectionFactory;
+
+    public SqlHelper(String dbUrl, String dbUser, String dbPass) {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             throw new StorageException("Unable to load DB Driver class.", e);
         }
+        connectionFactory = () ->
+                DriverManager.getConnection(dbUrl,dbUser, dbPass);
     }
-    private static final Config config = Config.getInstance();
-    private static final ConnectionFactory connectionFactory = () ->
-        DriverManager.getConnection(config.getDbUrl(),config.getDbUser(), config.getDbPass());
 
-    public static Object executeStatement(String statementString,
+    public Object executeStatement(String statementString,
                                            ThrowingStatementExecutor<PreparedStatement> statementExecutor) {
         try (Connection conn = connectionFactory.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(statementString);
             return statementExecutor.execute(ps);
         } catch (SQLException e) {
-            if (e.getClass() == PSQLException.class) {
+            if (e instanceof PSQLException) {
                 ServerErrorMessage m = ((PSQLException) e).getServerErrorMessage();
-                if (m.getDetail().contains("уже существует")){
+                if (m.getSQLState().equals("23505")) {
+                    /*SQLState = 23505
+                    Class 23 — Integrity Constraint Violation - unique_violation */
                     throw new ExistStorageException();
                 }
             }
