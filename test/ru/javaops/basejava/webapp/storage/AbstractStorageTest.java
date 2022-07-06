@@ -3,6 +3,7 @@ package ru.javaops.basejava.webapp.storage;
 import org.junit.Before;
 import org.junit.Test;
 import ru.javaops.basejava.webapp.Config;
+import ru.javaops.basejava.webapp.ResumeTestData;
 import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
@@ -29,15 +30,15 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-//        RESUME_1 = ResumeTestData.getInstance(UUID_1, FULL_NAME_1);
-//        RESUME_2 = ResumeTestData.getInstance(UUID_2, FULL_NAME_2);
-//        RESUME_3 = ResumeTestData.getInstance(UUID_3, FULL_NAME_3);
-//        RESUME_4 = ResumeTestData.getInstance(UUID_4, FULL_NAME_4);
+        RESUME_1 = ResumeTestData.getInstance(UUID_1, FULL_NAME_1);
+        RESUME_2 = ResumeTestData.getInstance(UUID_2, FULL_NAME_2);
+        RESUME_3 = ResumeTestData.getInstance(UUID_3, FULL_NAME_3);
+        RESUME_4 = ResumeTestData.getInstance(UUID_4, FULL_NAME_4);
 
-        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
-        RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
-        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
-        RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
+//        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
+//        RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
+//        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
+//        RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
     }
 
     protected Storage storage;
