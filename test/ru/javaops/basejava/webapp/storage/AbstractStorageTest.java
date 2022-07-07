@@ -6,6 +6,7 @@ import ru.javaops.basejava.webapp.Config;
 import ru.javaops.basejava.webapp.ResumeTestData;
 import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
+import ru.javaops.basejava.webapp.model.ContactType;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.LinkedList;
@@ -31,14 +32,18 @@ public abstract class AbstractStorageTest {
 
     static {
         RESUME_1 = ResumeTestData.getInstance(UUID_1, FULL_NAME_1);
-        RESUME_2 = ResumeTestData.getInstance(UUID_2, FULL_NAME_2);
-        RESUME_3 = ResumeTestData.getInstance(UUID_3, FULL_NAME_3);
+//        RESUME_2 = ResumeTestData.getInstance(UUID_2, FULL_NAME_2);
+//        RESUME_3 = ResumeTestData.getInstance(UUID_3, FULL_NAME_3);
         RESUME_4 = ResumeTestData.getInstance(UUID_4, FULL_NAME_4);
 
 //        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
-//        RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
+        RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
 //        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
 //        RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
+
+        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
+        RESUME_3.addContact(ContactType.MOB_NUMBER, "+79111234567");
+        RESUME_3.addContact(ContactType.MAIL, "test@test.com");
     }
 
     protected Storage storage;
@@ -80,9 +85,11 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void updateExist() {
-        storage.update(RESUME_1);
+        RESUME_3.addContact(ContactType.SKYPE,"test_skype");
+        RESUME_3.addContact(ContactType.MAIL,"newtest@test.com");
+        storage.update(RESUME_3);
         assertSize(3);
-        assertEquals(RESUME_1, storage.get(UUID_1));
+        assertEquals(RESUME_3, storage.get(UUID_3));
     }
 
     @Test(expected = NotExistStorageException.class)
