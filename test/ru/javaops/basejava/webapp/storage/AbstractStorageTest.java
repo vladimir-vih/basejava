@@ -6,11 +6,12 @@ import ru.javaops.basejava.webapp.Config;
 import ru.javaops.basejava.webapp.ResumeTestData;
 import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
-import ru.javaops.basejava.webapp.model.ContactType;
-import ru.javaops.basejava.webapp.model.Resume;
+import ru.javaops.basejava.webapp.model.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -31,19 +32,25 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
+        /*Resumes WITH contacts and sections*/
         RESUME_1 = ResumeTestData.getInstance(UUID_1, FULL_NAME_1);
 //        RESUME_2 = ResumeTestData.getInstance(UUID_2, FULL_NAME_2);
 //        RESUME_3 = ResumeTestData.getInstance(UUID_3, FULL_NAME_3);
         RESUME_4 = ResumeTestData.getInstance(UUID_4, FULL_NAME_4);
 
+        /*Resumes WITHOUT contacts and sections*/
 //        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
         RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
 //        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
 //        RESUME_4 = new Resume(UUID_4, FULL_NAME_4);
 
+        /*Resumes WITH TEST contacts and sections*/
         RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
         RESUME_3.addContact(ContactType.MOB_NUMBER, "+79111234567");
         RESUME_3.addContact(ContactType.MAIL, "test@test.com");
+        RESUME_3.addSection(SectionType.PERSONAL,new CharacteristicSection("Test personal info"));
+        RESUME_3.addSection(SectionType.QUALIFICATIONS,
+                new SkillsSection(Stream.of("Skill1", "Skill2").collect(Collectors.toList())));
     }
 
     protected Storage storage;
@@ -87,6 +94,9 @@ public abstract class AbstractStorageTest {
     public void updateExist() {
         RESUME_3.addContact(ContactType.SKYPE,"test_skype");
         RESUME_3.addContact(ContactType.MAIL,"newtest@test.com");
+        RESUME_3.addSection(SectionType.PERSONAL, new CharacteristicSection("New personal info"));
+        RESUME_3.addSection(SectionType.QUALIFICATIONS,
+                new SkillsSection(Stream.of("Skill3", "Skill4").collect(Collectors.toList())));
         storage.update(RESUME_3);
         assertSize(3);
         assertEquals(RESUME_3, storage.get(UUID_3));
