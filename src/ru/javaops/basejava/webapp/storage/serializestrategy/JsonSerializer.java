@@ -29,4 +29,20 @@ public class JsonSerializer implements SerializeStrategy{
             return gson.fromJson(reader, Resume.class);
         }
     }
+
+    public String WriteSection(Section obect) {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Section.class, new JsonSectionAdapter())
+                .create();
+        return gson.toJson(obect, Section.class);
+    }
+
+    public Section ReadSection(String value) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setPrettyPrinting();
+        gsonBuilder.registerTypeAdapter(Section.class, new JsonSectionAdapter());
+        Gson gson = gsonBuilder.create();
+        return gson.fromJson(value, Section.class);
+    }
 }

@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Initial resume class
@@ -31,8 +30,8 @@ public class Resume implements Comparable<Resume>, Serializable {
     public Resume() {
     }
 
-    public Resume(String fullName) {
-        this(UUID.randomUUID().toString(), fullName);
+    public Resume(String uuid) {
+        this(uuid, "");
     }
 
     public Resume(String uuid, String fullName) {
@@ -63,6 +62,7 @@ public class Resume implements Comparable<Resume>, Serializable {
     }
 
     public String getContact(ContactType contactName) {
+        ContactType mail = ContactType.MAIL;
         return contacts.get(contactName);
     }
 
@@ -85,6 +85,10 @@ public class Resume implements Comparable<Resume>, Serializable {
     public void addSection(SectionType type, Section section) {
         sections.put(type, section);
     }
+
+    public void removeContact(ContactType type) {contacts.remove(type);}
+
+    public void removeSection(SectionType type) {sections.remove(type);}
 
     @Override
     public boolean equals(Object o) {

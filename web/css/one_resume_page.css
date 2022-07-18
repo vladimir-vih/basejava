@@ -1,0 +1,18 @@
+body {
+    background-color: #1F1B24;
+    color: #FFC500;
+}
+
+a {
+    color: orange;
+}
+
+
+h1 {
+    color: red;
+    font-family: SansSerif;
+}
+
+h2 {
+    text-decoration: underline;
+}

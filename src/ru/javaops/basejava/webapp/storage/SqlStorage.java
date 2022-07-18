@@ -2,6 +2,7 @@ package ru.javaops.basejava.webapp.storage;
 
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.*;
+import ru.javaops.basejava.webapp.storage.serializestrategy.JsonSerializer;
 import ru.javaops.basejava.webapp.storage.sql.SqlHelper;
 
 import java.sql.Connection;
@@ -183,33 +184,38 @@ public class SqlStorage implements Storage {
     }
 
     private void insertSectionsToDB(Connection conn, Resume r) throws SQLException {
+        JsonSerializer jsonSerializer = new JsonSerializer();
         if (r.getSections().size() == 0) return;
         final String uuid = r.getUuid();
         try (PreparedStatement psInsert = conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<SectionType, Section> entry : r.getSections().entrySet()) {
-                switch (entry.getKey()) {
-                    case PERSONAL:
-                    case OBJECTIVE: {
-                        Section<String> characteristicSection = entry.getValue();
-                        psInsert.setString(1, uuid);
-                        psInsert.setString(2, entry.getKey().name());
-                        psInsert.setString(3, characteristicSection.getBody());
-                        psInsert.addBatch();
-                        break;
-                    }
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        Section<List<String>> skillsSection = entry.getValue();
-                        StringBuilder skillsSB = new StringBuilder();
-                        for (String s : skillsSection.getBody()) {
-                            skillsSB.append(s).append("\n");
-                        }
-                        psInsert.setString(1, uuid);
-                        psInsert.setString(2, entry.getKey().name());
-                        psInsert.setString(3, skillsSB.toString());
-                        psInsert.addBatch();
-                        break;
-                }
+                psInsert.setString(1, uuid);
+                psInsert.setString(2, entry.getKey().name());
+                psInsert.setString(3, jsonSerializer.WriteSection(entry.getValue()));
+                psInsert.addBatch();
+//                switch (entry.getKey()) {
+//                    case PERSONAL:
+//                    case OBJECTIVE: {
+//                        Section<String> characteristicSection = entry.getValue();
+//                        psInsert.setString(1, uuid);
+//                        psInsert.setString(2, entry.getKey().name());
+//                        psInsert.setString(3, characteristicSection.getBody());
+//                        psInsert.addBatch();
+//                        break;
+//                    }
+//                    case ACHIEVEMENT:
+//                    case QUALIFICATIONS:
+//                        Section<List<String>> skillsSection = entry.getValue();
+//                        StringBuilder skillsSB = new StringBuilder();
+//                        for (String s : skillsSection.getBody()) {
+//                            skillsSB.append(s).append("\n");
+//                        }
+//                        psInsert.setString(1, uuid);
+//                        psInsert.setString(2, entry.getKey().name());
+//                        psInsert.setString(3, skillsSB.toString());
+//                        psInsert.addBatch();
+//                        break;
+//                }
             }
             psInsert.executeBatch();
         }
@@ -224,21 +230,24 @@ public class SqlStorage implements Storage {
     }
 
     private void addSectionToResume(ResultSet rs, Resume r) throws SQLException {
+        JsonSerializer jsonSerializer = new JsonSerializer();
         SectionType sectionType = SectionType.valueOf(rs.getString("type"));
-        switch (sectionType) {
-            case PERSONAL:
-            case OBJECTIVE: {
-                r.addSection(sectionType, new CharacteristicSection(rs.getString("value")));
-                break;
-            }
-            case ACHIEVEMENT:
-            case QUALIFICATIONS: {
-                String[] skillsArr = rs.getString("value").split("\n");
-                List<String> skillsList = Arrays.asList(skillsArr);
-                r.addSection(sectionType, new SkillsSection(skillsList));
-                break;
-            }
-        }
+        r.addSection(sectionType, jsonSerializer.ReadSection(rs.getString("value")));
+//        SectionType sectionType = SectionType.valueOf(rs.getString("type"));
+//        switch (sectionType) {
+//            case PERSONAL:
+//            case OBJECTIVE: {
+//                r.addSection(sectionType, new CharacteristicSection(rs.getString("value")));
+//                break;
+//            }
+//            case ACHIEVEMENT:
+//            case QUALIFICATIONS: {
+//                String[] skillsArr = rs.getString("value").split("\n");
+//                List<String> skillsList = Arrays.asList(skillsArr);
+//                r.addSection(sectionType, new SkillsSection(skillsList));
+//                break;
+//            }
+//        }
     }
 
     private void deleteByUuid(Connection conn, String uuid, String table) throws SQLException {
