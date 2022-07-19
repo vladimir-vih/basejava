@@ -34,7 +34,8 @@
     <dl>
         <dt>Full Name<br/><br/></dt>
         <dd>
-            Full Name: <input type="text" name="full_name" value="${resume.fullName}">
+            Full Name: <input type="text" name="full_name" value="${resume.fullName}"
+                              required placeholder="Full Name required">
         </dd>
     </dl>
     <dl>

@@ -35,14 +35,7 @@
                 <jsp:useBean id="resume" type="ru.javaops.basejava.webapp.model.Resume"/>
                 <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
                 <c:set var="mail" value="${resume.getContact(ContactType.MAIL)}"/>
-                <c:choose>
-                    <c:when test="${mail == null}">
-                        <td>no mail</td>
-                    </c:when>
-                    <c:otherwise>
-                        <td><a href="mailto:${mail}">${mail}</a></td>
-                    </c:otherwise>
-                </c:choose>
+                <td><a href="mailto:${mail}">${mail}</a></td>
                 <td><a href="resume?uuid=${resume.uuid}&action=delete"><img src="img/trash_icon.png"
                                                                             alt="Delete" width="50px"></a></td>
                 <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/edit_icon.png"
