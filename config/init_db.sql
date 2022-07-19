@@ -27,6 +27,38 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.resume
     OWNER to postgres;
 
+
+-- SEQUENCE: public.contact_id_seq
+
+-- DROP SEQUENCE IF EXISTS public.contact_id_seq;
+
+CREATE SEQUENCE IF NOT EXISTS public.contact_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1
+    OWNED BY contact.id;
+
+ALTER SEQUENCE public.contact_id_seq
+    OWNER TO postgres;
+
+
+-- SEQUENCE: public.section_id_seq
+
+-- DROP SEQUENCE IF EXISTS public.section_id_seq;
+
+CREATE SEQUENCE IF NOT EXISTS public.section_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1
+    OWNED BY section.id;
+
+ALTER SEQUENCE public.section_id_seq
+    OWNER TO postgres;
+
 -- Table: public.contact
 
 -- DROP TABLE IF EXISTS public.contact;
