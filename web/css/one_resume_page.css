@@ -16,3 +16,10 @@ h1 {
 h2 {
     text-decoration: underline;
 }
+
+.line_border {
+    list-style-position: inside;
+    border: 5px solid #884c12;
+    display: inline-block;
+    /*border-color: #e8ae14;*/
+}

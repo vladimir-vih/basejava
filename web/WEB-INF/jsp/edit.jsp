@@ -20,6 +20,14 @@
         height: 100px;
     }
 
+    /*li {
+        list-style-type: none;
+        width: 100px;
+        overflow-x: auto; !* change to hidden if that's what you want *!
+        float: left;
+        margin-right: 10px;
+    }*/
+
 </style>
 <head>
     <link rel="stylesheet" href="css/one_resume_page.css">
@@ -27,12 +35,75 @@
 </head>
 <jsp:include page="/WEB-INF/fragments/header.html"/>
 <body>
+<script type="text/javascript">
+    function moreFields() {
+        /*counter++;*/
+        var newFields = document.getElementById('readroot').cloneNode(true);
+        console.log();
+        newFields.id = '';
+        console.log();
+        newFields.style.display = 'block';
+        console.log();
+        var newField = newFields.childNodes;
+        /*        for (var i=0;i<newField.length;i++) {
+                    var theName = newField[i].name
+                    if (theName)
+                        newField[i].name = theName + counter;
+                }*/
+        var insertHere = document.getElementById('writeroot');
+        console.log();
+        insertHere.parentNode.insertBefore(newFields, insertHere);
+        console.log();
+    }
+</script>
 <h1>Resume of ${resume.fullName}</h1>
 <a href="resume?uuid=${resume.uuid}&action=delete">Delete resume</a>
+
+<div id="readroot" style="display: none">
+
+    <input type="button" value="Remove Experience"
+           onclick="this.parentNode.parentNode.removeChild(this.parentNode);"/><br/><br/>
+    <label>
+        <input type="text" size="6" name="${type}StartDate" required minlength="10" maxlength="10" value="YYYY-MM-DD">
+        Since YYYY-MM-DD:
+    </label>
+    <br/>
+    <label>
+        <input type="text" size="6" name="${type}EndDate" required minlength="3" maxlength="10" value="YYYY-MM-DD">
+        Till YYYY-MM-DD
+        (write "<b>NOW</b>" if it's current position):
+    </label>
+    <br/><br/>
+    <label>
+        <input type="text" size="30" name="${type}CompanyName" required value="Company Name">
+        Company Name:
+    </label>
+    <br/><br/>
+    <label>
+        <input type="text" size="75" name="${type}CompanyUrl" value="http://company.com">
+        Company URL:
+    </label>
+    <br/><br/>
+    <label>
+        <input type="text" size="30" name="${type}ShortInfo" required value="Your position">
+        Position name:
+    </label>
+    <br/><br/>
+    <c:if test="${type.equals(SectionType.EXPERIENCE)}">
+        <label>
+            <textarea rows="30" name="${type}DetailedInfo">Your detailed Information</textarea>
+            Detailed information:
+        </label>
+        <br/><br/>
+    </c:if>
+</div>
+
 <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
     <input type="hidden" name="uuid" value="${resume.uuid}">
     <dl>
-        <dt>Full Name<br/><br/></dt>
+        <dt>Full Name<br/><br/>
+        </dt>
+
         <dd>
             Full Name: <input type="text" name="full_name" value="${resume.fullName}"
                               required placeholder="Full Name required">
@@ -50,44 +121,73 @@
     </dl>
     <dl>
         <c:forEach var="type" items="${SectionType.values()}">
-            <dt>${type.name()}</dt>
+            <dt>${type.getTitle()}</dt>
             <dd>
                 <c:choose>
                     <c:when test="${type.equals(SectionType.PERSONAL) || type.equals(SectionType.OBJECTIVE)}">
                         <textarea name="${type.name()}" rows="10">${resume.getSection(type).getBody()}</textarea>
+                        <br/><br/>
                     </c:when>
                     <c:when test="${type.equals(SectionType.QUALIFICATIONS) || type.equals(SectionType.ACHIEVEMENT)}">
                         <textarea name="${type.name()}" rows="30"><c:forEach var="skill"
                                                                              items="${resume.getSection(type).getBody()}"
-                        >${skill}&#10;</c:forEach></textarea>
+                        >${skill}&#10;</c:forEach></textarea><br/><br/>
                     </c:when>
                     <c:when test="${type.equals(SectionType.EXPERIENCE) || type.equals(SectionType.EDUCATION)}">
-                        <c:forEach var="experience" items="${resume.getSection(type).getBody()}">
-                            <jsp:useBean id="experience" type="ru.javaops.basejava.webapp.model.Experience"/>
-                            <li>
-                                <p>SINCE: ${experience.getStartDate()} TILL
-                                    <c:choose>
-                                        <c:when test="${HtmlHelper.isCurrentPosition(experience)}">
-                                            NOW
-                                        </c:when>
-                                        <c:when test="${!HtmlHelper.isCurrentPosition(experience)}">
-                                            : ${experience.getEndDate()}
-                                        </c:when>
-                                    </c:choose>
-                                </p>
-                                <c:choose>
-                                    <c:when test="${HtmlHelper.hasExperienceUrl(experience)}">
-                                        <p><a href="${experience.company.url.url}">${experience.company.name}</a>
-                                        </p>
-                                    </c:when>
-                                    <c:when test="${!HtmlHelper.hasExperienceUrl(experience)}">
-                                        <p>${experience.company.name}</p>
-                                    </c:when>
-                                </c:choose>
-                                <p>${experience.shortInfo}</p>
-                                <p>${experience.detailedInfo}</p>
-                            </li>
-                        </c:forEach>
+                        <ol>
+                            <c:forEach var="experience" items="${resume.getSection(type).getBody()}">
+                                <jsp:useBean id="experience" type="ru.javaops.basejava.webapp.model.Experience"/>
+                                <div class="line_border">
+                                    <li>
+                                        <label>
+                                            <input type="text" size="6" name="${type}StartDate" required
+                                                   minlength="10" maxlength="10"
+                                                   value="${experience.getStartDate()}">
+                                            Since YYYY-MM-DD:
+                                        </label>
+                                        <br/>
+                                        <label>
+                                            <input type="text" size="6" name="${type}EndDate" required
+                                                   minlength="3" maxlength="10"
+                                                   value="${HtmlHelper.getEndDateString(experience)}">
+                                            Till YYYY-MM-DD
+                                            (write "<b>NOW</b>" if it's current position):
+                                        </label>
+                                        <br/><br/>
+                                        <label>
+                                            <input type="text" size="30" name="${type}CompanyName" required
+                                                   value="${experience.company.name}">
+                                            Company Name:
+                                        </label>
+                                        <br/><br/>
+                                        <label>
+                                            <input type="text" size="75" name="${type}CompanyUrl"
+                                                   value="${experience.company.url.url}">
+                                            Company URL:
+                                        </label>
+                                        <br/><br/>
+                                        <label>
+                                            <input type="text" size="30" name="${type}ShortInfo" required
+                                                   value="${experience.shortInfo}">
+                                            Position name:
+                                        </label>
+                                        <br/><br/>
+                                        <c:if test="${type.equals(SectionType.EXPERIENCE)}">
+                                            <label>
+                                                <textarea rows="30" name="${type}DetailedInfo">
+                                                        ${experience.detailedInfo}</textarea>
+                                                Detailed information:
+                                            </label>
+                                            <br/><br/>
+                                        </c:if>
+                                    </li>
+                                </div>
+                                <br/><br/>
+                            </c:forEach>
+                            <span id="writeroot"></span>
+
+                            <input type="button" id="moreFields" value="Add new Experience"/>
+                        </ol>
                     </c:when>
                 </c:choose>
             </dd>
@@ -97,5 +197,5 @@
     <button onclick="window.history.back();return false;">Cancel</button>
 </form>
 </body>
-<jsp:include page="/WEB-INF/fragments/footer.html"></jsp:include>
+<jsp:include page="/WEB-INF/fragments/footer.html"/>
 </html>

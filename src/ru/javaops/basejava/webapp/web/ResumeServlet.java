@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,8 +80,37 @@ public class ResumeServlet extends HttpServlet {
                 }
                 case EDUCATION:
                 case EXPERIENCE:
-                    Section<Experience> oldSection = (Section<Experience>) HtmlHelper.getResume(uuid).getSection(type);
-                    if (oldSection != null) r.addSection(type, oldSection);
+                    final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    List<Experience> experienceList = new ArrayList<>();
+                    String sectionName = type.name();
+                    String[] startDatesArr = request.getParameterValues(sectionName + "StartDate");
+                    final int sectionSize = startDatesArr.length;
+                    String[] endDatesArr = request.getParameterValues(sectionName + "EndDate");
+                    String[] companyNameArr = request.getParameterValues(sectionName + "CompanyName");
+                    String[] companyUrlArr = request.getParameterValues(sectionName + "CompanyUrl");
+                    String[] shortInfoArr = request.getParameterValues(sectionName + "ShortInfo");
+                    String[] detailedInfoArr = request.getParameterValues(sectionName + "DetailedInfo");
+                    for (int i = 0; i < sectionSize; i++) {
+                        final String companyName = companyNameArr[i];
+                        final Company company = new Company(companyName, new Link(companyName, companyUrlArr[i]));
+                        LocalDate startDate;
+                        LocalDate endDate;
+                        try {
+                            startDate = LocalDate.parse(startDatesArr[i], formatter);
+                            endDate = endDatesArr[i].equals("NOW") ?
+                                    LocalDate.MAX : LocalDate.parse(startDatesArr[i], formatter);
+                        } catch (DateTimeParseException e) {
+                            request.setAttribute("uuid", uuid);
+                            request.setAttribute("company_name", companyName);
+                            request.getRequestDispatcher("WEB-INF/jsp/incorrect_date_format.jsp")
+                                    .forward(request, response);
+                            return;
+                        }
+
+                        final String detailedInfo = detailedInfoArr == null ? null : detailedInfoArr[i];
+                        experienceList.add(new Experience(company, startDate, endDate, shortInfoArr[i], detailedInfo));
+                    }
+                    r.addSection(type, new ExperienceSection(experienceList));
                     break;
             }
         }

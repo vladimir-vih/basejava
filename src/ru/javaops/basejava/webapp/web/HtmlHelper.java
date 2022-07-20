@@ -88,8 +88,8 @@ public class HtmlHelper {
         }
     }
 
-    public static boolean isCurrentPosition(Experience experience) {
-        return experience.getEndDate().equals(LocalDate.MAX);
+    public static String getEndDateString(Experience experience) {
+        return experience.getEndDate().equals(LocalDate.MAX) ? "NOW" : experience.getEndDate().toString();
     }
 
     public static boolean hasExperienceUrl(Experience experience) {

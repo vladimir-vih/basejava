@@ -59,15 +59,7 @@
                         <c:forEach var="experience" items="${sectionEntry.getValue().getBody()}">
                             <jsp:useBean id="experience" type="ru.javaops.basejava.webapp.model.Experience"/>
                             <li>
-                                <p>SINCE: ${experience.getStartDate()} TILL
-                                    <c:choose>
-                                        <c:when test="${HtmlHelper.isCurrentPosition(experience)}">
-                                            NOW
-                                        </c:when>
-                                        <c:when test="${!HtmlHelper.isCurrentPosition(experience)}">
-                                            : ${experience.getEndDate()}
-                                        </c:when>
-                                    </c:choose>
+                                <p>SINCE: ${experience.getStartDate()} TILL: ${HtmlHelper.getEndDateString(experience)}
                                 </p>
                                 <c:choose>
                                     <c:when test="${HtmlHelper.hasExperienceUrl(experience)}">
