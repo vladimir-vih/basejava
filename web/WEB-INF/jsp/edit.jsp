@@ -140,43 +140,43 @@
                                 <div class="line_border">
                                     <li>
                                         <label>
+                                            Since YYYY-MM-DD:
                                             <input type="text" size="6" name="${type}StartDate" required
                                                    minlength="10" maxlength="10"
                                                    value="${experience.getStartDate()}">
-                                            Since YYYY-MM-DD:
                                         </label>
                                         <br/>
                                         <label>
+                                            Till YYYY-MM-DD
+                                            (write "<b>NOW</b>" if it's current position):
                                             <input type="text" size="6" name="${type}EndDate" required
                                                    minlength="3" maxlength="10"
                                                    value="${HtmlHelper.getEndDateString(experience)}">
-                                            Till YYYY-MM-DD
-                                            (write "<b>NOW</b>" if it's current position):
                                         </label>
                                         <br/><br/>
                                         <label>
+                                            Company Name:
                                             <input type="text" size="30" name="${type}CompanyName" required
                                                    value="${experience.company.name}">
-                                            Company Name:
                                         </label>
                                         <br/><br/>
                                         <label>
+                                            Company URL:
                                             <input type="text" size="75" name="${type}CompanyUrl"
                                                    value="${experience.company.url.url}">
-                                            Company URL:
                                         </label>
                                         <br/><br/>
                                         <label>
+                                            Position name:
                                             <input type="text" size="30" name="${type}ShortInfo" required
                                                    value="${experience.shortInfo}">
-                                            Position name:
                                         </label>
                                         <br/><br/>
                                         <c:if test="${type.equals(SectionType.EXPERIENCE)}">
                                             <label>
+                                                Detailed information:
                                                 <textarea rows="30" name="${type}DetailedInfo">
                                                         ${experience.detailedInfo}</textarea>
-                                                Detailed information:
                                             </label>
                                             <br/><br/>
                                         </c:if>
