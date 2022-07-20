@@ -35,27 +35,6 @@
 </head>
 <jsp:include page="/WEB-INF/fragments/header.html"/>
 <body>
-<script type="text/javascript">
-    function moreFields() {
-        /*counter++;*/
-        var newFields = document.getElementById('readroot').cloneNode(true);
-        console.log();
-        newFields.id = '';
-        console.log();
-        newFields.style.display = 'block';
-        console.log();
-        var newField = newFields.childNodes;
-        /*        for (var i=0;i<newField.length;i++) {
-                    var theName = newField[i].name
-                    if (theName)
-                        newField[i].name = theName + counter;
-                }*/
-        var insertHere = document.getElementById('writeroot');
-        console.log();
-        insertHere.parentNode.insertBefore(newFields, insertHere);
-        console.log();
-    }
-</script>
 <h1>Resume of ${resume.fullName}</h1>
 <a href="resume?uuid=${resume.uuid}&action=delete">Delete resume</a>
 
@@ -180,13 +159,63 @@
                                             </label>
                                             <br/><br/>
                                         </c:if>
+                                        <label>Write word "delete", if you want to delete this element
+                                            <input type="text" size="6" name="${type}deleted">
+                                        </label><br/>
                                     </li>
                                 </div>
                                 <br/><br/>
                             </c:forEach>
-                            <span id="writeroot"></span>
+                            <div class="line_border">
+                                <li> New element<br/><br/>
+                                    <label style="color: red;">Use ckeckbox,
+                                        if you need new element of ${type.title}!
+                                        <input type="checkbox" name="new_${type}" value="true"><br/><br/>
+                                    </label>
 
-                            <input type="button" id="moreFields" value="Add new Experience"/>
+                                    <label>
+                                        Since YYYY-MM-DD:
+                                        <input type="text" size="6" name="new_${type}StartDate" required
+                                               minlength="10" maxlength="10"
+                                               value="YYYY-MM-DD">
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        Till YYYY-MM-DD
+                                        (write "<b>NOW</b>" if it's current position):
+                                        <input type="text" size="6" name="new_${type}EndDate" required
+                                               minlength="3" maxlength="10"
+                                               value="YYYY-MM-DD or NOW">
+                                    </label>
+                                    <br/><br/>
+                                    <label>
+                                        Company Name:
+                                        <input type="text" size="30" name="new_${type}CompanyName" required
+                                               value="Company Name">
+                                    </label>
+                                    <br/><br/>
+                                    <label>
+                                        Company URL:
+                                        <input type="text" size="75" name="new_${type}CompanyUrl"
+                                               value="Company URL">
+                                    </label>
+                                    <br/><br/>
+                                    <label>
+                                        Position name:
+                                        <input type="text" size="30" name="new_${type}ShortInfo" required
+                                               value="Your position description">
+                                    </label>
+                                    <br/><br/>
+                                    <c:if test="${type.equals(SectionType.EXPERIENCE)}">
+                                        <label>
+                                            Detailed information:
+                                            <textarea rows="30" name="new_${type}DetailedInfo">Detailed information
+                                                    </textarea>
+                                        </label>
+                                        <br/><br/>
+                                    </c:if>
+                                </li>
+                            </div>
                         </ol>
                     </c:when>
                 </c:choose>

@@ -1,5 +1,6 @@
 package ru.javaops.basejava.webapp.web;
 
+import ru.javaops.basejava.webapp.exception.IncorrectDateFormat;
 import ru.javaops.basejava.webapp.model.*;
 
 import javax.servlet.ServletException;
@@ -80,41 +81,65 @@ public class ResumeServlet extends HttpServlet {
                 }
                 case EDUCATION:
                 case EXPERIENCE:
-                    final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    List<Experience> experienceList = new ArrayList<>();
-                    String sectionName = type.name();
-                    String[] startDatesArr = request.getParameterValues(sectionName + "StartDate");
-                    final int sectionSize = startDatesArr.length;
-                    String[] endDatesArr = request.getParameterValues(sectionName + "EndDate");
-                    String[] companyNameArr = request.getParameterValues(sectionName + "CompanyName");
-                    String[] companyUrlArr = request.getParameterValues(sectionName + "CompanyUrl");
-                    String[] shortInfoArr = request.getParameterValues(sectionName + "ShortInfo");
-                    String[] detailedInfoArr = request.getParameterValues(sectionName + "DetailedInfo");
-                    for (int i = 0; i < sectionSize; i++) {
-                        final String companyName = companyNameArr[i];
-                        final Company company = new Company(companyName, new Link(companyName, companyUrlArr[i]));
-                        LocalDate startDate;
-                        LocalDate endDate;
-                        try {
-                            startDate = LocalDate.parse(startDatesArr[i], formatter);
-                            endDate = endDatesArr[i].equals("NOW") ?
-                                    LocalDate.MAX : LocalDate.parse(startDatesArr[i], formatter);
-                        } catch (DateTimeParseException e) {
-                            request.setAttribute("uuid", uuid);
-                            request.setAttribute("company_name", companyName);
-                            request.getRequestDispatcher("WEB-INF/jsp/incorrect_date_format.jsp")
-                                    .forward(request, response);
-                            return;
+                    try {
+                        List<Experience> finalList = getExperienceList(request, type.name());
+                        List<Experience> newExperience = null;
+                        if (request.getParameterMap().containsKey("new_" + type.name())
+                                && request.getParameter("new_" + type.name()).equals("true")) {
+                            newExperience = getExperienceList(request, "new_" + type.name());
                         }
-
-                        final String detailedInfo = detailedInfoArr == null ? null : detailedInfoArr[i];
-                        experienceList.add(new Experience(company, startDate, endDate, shortInfoArr[i], detailedInfo));
+                        if (newExperience != null) finalList.addAll(newExperience);
+                        r.addSection(type, new ExperienceSection(finalList));
+                    } catch (IncorrectDateFormat e) {
+                        request.setAttribute("uuid", uuid);
+                        request.setAttribute("company_name", e.companyName);
+                        request.getRequestDispatcher("WEB-INF/jsp/incorrect_date_format.jsp")
+                                .forward(request, response);
+                        return;
                     }
-                    r.addSection(type, new ExperienceSection(experienceList));
                     break;
             }
         }
         HtmlHelper.updateResume(r);
         response.sendRedirect("resume");
+    }
+
+    private List<Experience> getExperienceList(HttpServletRequest request, String prefix) throws IncorrectDateFormat
+    {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        List<Experience> experienceList = new ArrayList<>();
+        String[] startDatesArr = request.getParameterValues(prefix + "StartDate");
+        final int sectionSize = startDatesArr.length;
+        String[] deletedArr = request.getParameterValues(prefix + "deleted");
+        String[] endDatesArr = request.getParameterValues(prefix + "EndDate");
+        String[] companyNameArr = request.getParameterValues(prefix + "CompanyName");
+        String[] companyUrlArr = request.getParameterValues(prefix + "CompanyUrl");
+        String[] shortInfoArr = request.getParameterValues(prefix + "ShortInfo");
+        String[] detailedInfoArr = request.getParameterValues(prefix + "DetailedInfo");
+        for (int i = 0; i < sectionSize; i++) {
+            if (deletedArr[i].equals("deleted")) {
+                continue;
+            }
+            final String companyName = companyNameArr[i];
+            Link companyUrl = null;
+            String companyUrlString = companyUrlArr[i];
+            if (companyUrlString != null && companyUrlString.trim().length() > 0 ) {
+                companyUrl = new Link(companyName, companyUrlString);
+            }
+            final Company company = new Company(companyName, companyUrl);
+            LocalDate startDate;
+            LocalDate endDate;
+            try {
+                startDate = LocalDate.parse(startDatesArr[i], formatter);
+                endDate = endDatesArr[i].equals("NOW") ?
+                        LocalDate.MAX : LocalDate.parse(startDatesArr[i], formatter);
+            } catch (DateTimeParseException e) {
+                throw new IncorrectDateFormat(e, companyName);
+            }
+
+            final String detailedInfo = detailedInfoArr == null ? null : detailedInfoArr[i];
+            experienceList.add(new Experience(company, startDate, endDate, shortInfoArr[i], detailedInfo));
+        }
+        return experienceList;
     }
 }
