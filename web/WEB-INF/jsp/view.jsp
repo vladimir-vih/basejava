@@ -42,40 +42,47 @@
         <c:forEach var="sectionEntry" items="${resume.sections}">
             <jsp:useBean id="sectionEntry" type="java.util.Map.Entry<ru.javaops.basejava.webapp.model.SectionType,
         ru.javaops.basejava.webapp.model.Section>"/>
-            <h2>${sectionEntry.getKey().getTitle()}</h2>
-            <c:choose>
-                <c:when test="${sectionEntry.getKey().getDisplayType().equals(\"string\")}">
-                    <p>${sectionEntry.getValue().getBody()}</p>
-                </c:when>
-                <c:when test="${sectionEntry.getKey().getDisplayType().equals(\"list\")}">
-                    <ul>
-                        <c:forEach var="string" items="${sectionEntry.getValue().getBody()}">
-                            <li>${string}<br/><br/></li>
-                        </c:forEach>
-                    </ul>
-                </c:when>
-                <c:when test="${sectionEntry.getKey().getDisplayType().equals(\"experience\")}">
-                    <ol>
-                        <c:forEach var="experience" items="${sectionEntry.getValue().getBody()}">
-                            <jsp:useBean id="experience" type="ru.javaops.basejava.webapp.model.Experience"/>
-                            <li>
-                                <p>SINCE: ${experience.getStartDate()} TILL: ${HtmlHelper.getEndDateString(experience)}
-                                </p>
-                                <c:choose>
-                                    <c:when test="${HtmlHelper.hasExperienceUrl(experience)}">
-                                        <p><a href="${experience.company.url.url}">${experience.company.name}</a></p>
-                                    </c:when>
-                                    <c:when test="${!HtmlHelper.hasExperienceUrl(experience)}">
-                                        <p>${experience.company.name}</p>
-                                    </c:when>
-                                </c:choose>
-                                <p>${experience.shortInfo}</p>
-                                <p>${experience.detailedInfo}</p>
-                            </li>
-                        </c:forEach>
-                    </ol>
-                </c:when>
-            </c:choose>
+
+                <c:choose>
+                    <c:when test="${sectionEntry.getKey().getDisplayType().equals(\"string\")}">
+                        <h2>${sectionEntry.getKey().getTitle()}</h2>
+                        <p>${sectionEntry.getValue().getBody()}</p>
+                    </c:when>
+                    <c:when test="${sectionEntry.getKey().getDisplayType().equals(\"list\")}">
+                        <c:if test="${sectionEntry.getValue().getBody().size() > 0}">
+                            <h2>${sectionEntry.getKey().getTitle()}</h2>
+                            <ul>
+                                <c:forEach var="string" items="${sectionEntry.getValue().getBody()}">
+                                    <li>${string}<br/><br/></li>
+                                </c:forEach>
+                            </ul>
+                        </c:if>
+                    </c:when>
+                    <c:when test="${sectionEntry.getKey().getDisplayType().equals(\"experience\")}">
+                        <c:if test="${sectionEntry.getValue().getBody().size() > 0}">
+                            <h2>${sectionEntry.getKey().getTitle()}</h2>
+                            <ol>
+                                <c:forEach var="experience" items="${sectionEntry.getValue().getBody()}">
+                                    <jsp:useBean id="experience" type="ru.javaops.basejava.webapp.model.Experience"/>
+                                    <li>
+                                        <p>SINCE: ${experience.getStartDate()} TILL: ${HtmlHelper.getEndDateString(experience)}
+                                        </p>
+                                        <c:choose>
+                                            <c:when test="${HtmlHelper.hasExperienceUrl(experience)}">
+                                                <p><a href="${experience.company.url.url}">${experience.company.name}</a></p>
+                                            </c:when>
+                                            <c:when test="${!HtmlHelper.hasExperienceUrl(experience)}">
+                                                <p>${experience.company.name}</p>
+                                            </c:when>
+                                        </c:choose>
+                                        <p>${experience.shortInfo}</p>
+                                        <p>${experience.detailedInfo}</p>
+                                    </li>
+                                </c:forEach>
+                            </ol>
+                        </c:if>
+                    </c:when>
+                </c:choose>
         </c:forEach>
     </c:if>
 </dif>

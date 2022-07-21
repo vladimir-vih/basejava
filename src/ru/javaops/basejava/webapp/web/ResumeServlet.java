@@ -104,10 +104,12 @@ public class ResumeServlet extends HttpServlet {
         response.sendRedirect("resume");
     }
 
-    private List<Experience> getExperienceList(HttpServletRequest request, String prefix) throws IncorrectDateFormat
-    {
+    private List<Experience> getExperienceList(HttpServletRequest request, String prefix) throws IncorrectDateFormat {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<Experience> experienceList = new ArrayList<>();
+        if (!request.getParameterMap().containsKey(prefix + "StartDate")) {
+            return experienceList;
+        }
         String[] startDatesArr = request.getParameterValues(prefix + "StartDate");
         final int sectionSize = startDatesArr.length;
         String[] deletedArr = request.getParameterValues(prefix + "deleted");
@@ -117,13 +119,15 @@ public class ResumeServlet extends HttpServlet {
         String[] shortInfoArr = request.getParameterValues(prefix + "ShortInfo");
         String[] detailedInfoArr = request.getParameterValues(prefix + "DetailedInfo");
         for (int i = 0; i < sectionSize; i++) {
-            if (deletedArr[i].equals("deleted")) {
-                continue;
+            if (!prefix.contains("new_")) {
+                if (deletedArr[i].equals("delete")) {
+                    continue;
+                }
             }
             final String companyName = companyNameArr[i];
             Link companyUrl = null;
             String companyUrlString = companyUrlArr[i];
-            if (companyUrlString != null && companyUrlString.trim().length() > 0 ) {
+            if (companyUrlString != null && companyUrlString.trim().length() > 0) {
                 companyUrl = new Link(companyName, companyUrlString);
             }
             final Company company = new Company(companyName, companyUrl);

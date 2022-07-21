@@ -135,7 +135,7 @@
                                         <br/><br/>
                                         <label>
                                             Company Name:
-                                            <input type="text" size="30" name="${type}CompanyName" required
+                                            <input type="text" size="30" name="${type}CompanyName"
                                                    value="${experience.company.name}">
                                         </label>
                                         <br/><br/>
@@ -147,7 +147,7 @@
                                         <br/><br/>
                                         <label>
                                             Position name:
-                                            <input type="text" size="30" name="${type}ShortInfo" required
+                                            <input type="text" size="30" name="${type}ShortInfo"
                                                    value="${experience.shortInfo}">
                                         </label>
                                         <br/><br/>
@@ -175,42 +175,42 @@
 
                                     <label>
                                         Since YYYY-MM-DD:
-                                        <input type="text" size="6" name="new_${type}StartDate" required
+                                        <input type="text" size="6" name="new_${type}StartDate"
                                                minlength="10" maxlength="10"
-                                               value="YYYY-MM-DD">
+                                               placeholder="YYYY-MM-DD">
                                     </label>
                                     <br/>
                                     <label>
                                         Till YYYY-MM-DD
                                         (write "<b>NOW</b>" if it's current position):
-                                        <input type="text" size="6" name="new_${type}EndDate" required
+                                        <input type="text" size="6" name="new_${type}EndDate"
                                                minlength="3" maxlength="10"
-                                               value="YYYY-MM-DD or NOW">
+                                               placeholder="YYYY-MM-DD or NOW">
                                     </label>
                                     <br/><br/>
                                     <label>
                                         Company Name:
-                                        <input type="text" size="30" name="new_${type}CompanyName" required
-                                               value="Company Name">
+                                        <input type="text" size="30" name="new_${type}CompanyName"
+                                               placeholder="Company Name">
                                     </label>
                                     <br/><br/>
                                     <label>
                                         Company URL:
                                         <input type="text" size="75" name="new_${type}CompanyUrl"
-                                               value="Company URL">
+                                               placeholder="Company URL">
                                     </label>
                                     <br/><br/>
                                     <label>
                                         Position name:
-                                        <input type="text" size="30" name="new_${type}ShortInfo" required
-                                               value="Your position description">
+                                        <input type="text" size="30" name="new_${type}ShortInfo"
+                                               placeholder="Your position description">
                                     </label>
                                     <br/><br/>
                                     <c:if test="${type.equals(SectionType.EXPERIENCE)}">
                                         <label>
                                             Detailed information:
-                                            <textarea rows="30" name="new_${type}DetailedInfo">Detailed information
-                                                    </textarea>
+                                            <textarea rows="30" name="new_${type}DetailedInfo"
+                                                      placeholder="Detailed information"></textarea>
                                         </label>
                                         <br/><br/>
                                     </c:if>
