@@ -119,10 +119,8 @@ public class ResumeServlet extends HttpServlet {
         String[] shortInfoArr = request.getParameterValues(prefix + "ShortInfo");
         String[] detailedInfoArr = request.getParameterValues(prefix + "DetailedInfo");
         for (int i = 0; i < sectionSize; i++) {
-            if (!prefix.contains("new_")) {
-                if (deletedArr[i].equals("delete")) {
-                    continue;
-                }
+            if (deletedArr[i].equals("delete")) {
+                continue;
             }
             if ((startDatesArr[i] == null || startDatesArr[i].trim().length() == 0)
                     && (endDatesArr[i] == null || endDatesArr[i].trim().length() == 0)
