@@ -118,44 +118,39 @@
                                 <jsp:useBean id="experience" type="ru.javaops.basejava.webapp.model.Experience"/>
                                 <div class="line_border">
                                     <li>
-                                        <label>
-                                            Since YYYY-MM-DD:
+                                        <label>Since YYYY-MM-DD:
                                             <input type="text" size="6" name="${type}StartDate" required
                                                    minlength="10" maxlength="10"
                                                    value="${experience.getStartDate()}">
                                         </label>
                                         <br/>
-                                        <label>
-                                            Till YYYY-MM-DD
+                                        <label>Till YYYY-MM-DD
                                             (write "<b>NOW</b>" if it's current position):
                                             <input type="text" size="6" name="${type}EndDate" required
                                                    minlength="3" maxlength="10"
                                                    value="${HtmlHelper.getEndDateString(experience)}">
                                         </label>
                                         <br/><br/>
-                                        <label>
-                                            Company Name:
+                                        <label>Company Name:
                                             <input type="text" size="30" name="${type}CompanyName"
                                                    value="${experience.company.name}">
                                         </label>
                                         <br/><br/>
-                                        <label>
-                                            Company URL:
+                                        <label>Company URL:
                                             <input type="text" size="75" name="${type}CompanyUrl"
                                                    value="${experience.company.url.url}">
                                         </label>
                                         <br/><br/>
-                                        <label>
-                                            Position name:
+                                        <label>Position name:
                                             <input type="text" size="30" name="${type}ShortInfo"
                                                    value="${experience.shortInfo}">
                                         </label>
                                         <br/><br/>
                                         <c:if test="${type.equals(SectionType.EXPERIENCE)}">
-                                            <label>
-                                                Detailed information:
-                                                <textarea rows="30" name="${type}DetailedInfo">
-                                                        ${experience.detailedInfo}</textarea>
+                                            <label>Detailed information:
+                                                <textarea
+                                                        rows="30"
+                                                        name="${type}DetailedInfo">${experience.detailedInfo}</textarea>
                                             </label>
                                             <br/><br/>
                                         </c:if>
@@ -168,52 +163,46 @@
                             </c:forEach>
                             <div class="line_border">
                                 <li> New element<br/><br/>
-                                    <label style="color: red;">Use ckeckbox,
+                                    <%--<label style="color: red;">Use ckeckbox,
                                         if you need new element of ${type.title}!
                                         <input type="checkbox" name="new_${type}" value="true"><br/><br/>
-                                    </label>
-
-                                    <label>
-                                        Since YYYY-MM-DD:
-                                        <input type="text" size="6" name="new_${type}StartDate"
+                                    </label>--%>
+                                    <label>Since YYYY-MM-DD:
+                                        <input type="text" size="6" name="<%--new_--%>${type}StartDate"
                                                minlength="10" maxlength="10"
                                                placeholder="YYYY-MM-DD">
                                     </label>
                                     <br/>
-                                    <label>
-                                        Till YYYY-MM-DD
+                                    <label>Till YYYY-MM-DD
                                         (write "<b>NOW</b>" if it's current position):
-                                        <input type="text" size="6" name="new_${type}EndDate"
+                                        <input type="text" size="6" name="<%--new_--%>${type}EndDate"
                                                minlength="3" maxlength="10"
                                                placeholder="YYYY-MM-DD or NOW">
                                     </label>
                                     <br/><br/>
-                                    <label>
-                                        Company Name:
-                                        <input type="text" size="30" name="new_${type}CompanyName"
+                                    <label>Company Name:
+                                        <input type="text" size="30" name="<%--new_--%>${type}CompanyName"
                                                placeholder="Company Name">
                                     </label>
                                     <br/><br/>
-                                    <label>
-                                        Company URL:
-                                        <input type="text" size="75" name="new_${type}CompanyUrl"
+                                    <label>Company URL:
+                                        <input type="text" size="75" name="<%--new_--%>${type}CompanyUrl"
                                                placeholder="Company URL">
                                     </label>
                                     <br/><br/>
-                                    <label>
-                                        Position name:
-                                        <input type="text" size="30" name="new_${type}ShortInfo"
+                                    <label>Position name:
+                                        <input type="text" size="30" name="<%--new_--%>${type}ShortInfo"
                                                placeholder="Your position description">
                                     </label>
                                     <br/><br/>
                                     <c:if test="${type.equals(SectionType.EXPERIENCE)}">
-                                        <label>
-                                            Detailed information:
-                                            <textarea rows="30" name="new_${type}DetailedInfo"
+                                        <label>Detailed information:
+                                            <textarea rows="30" name="<%--new_--%>${type}DetailedInfo"
                                                       placeholder="Detailed information"></textarea>
                                         </label>
                                         <br/><br/>
                                     </c:if>
+                                    <input type="hidden" name="${type}deleted" value="">
                                 </li>
                             </div>
                         </ol>

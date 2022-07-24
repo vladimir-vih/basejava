@@ -83,12 +83,12 @@ public class ResumeServlet extends HttpServlet {
                 case EXPERIENCE:
                     try {
                         List<Experience> finalList = getExperienceList(request, type.name());
-                        List<Experience> newExperience = null;
+                        /*List<Experience> newExperience = null;
                         if (request.getParameterMap().containsKey("new_" + type.name())
                                 && request.getParameter("new_" + type.name()).equals("true")) {
                             newExperience = getExperienceList(request, "new_" + type.name());
                         }
-                        if (newExperience != null) finalList.addAll(newExperience);
+                        if (newExperience != null) finalList.addAll(newExperience);*/
                         r.addSection(type, new ExperienceSection(finalList));
                     } catch (IncorrectDateFormat e) {
                         request.setAttribute("uuid", uuid);
@@ -124,6 +124,11 @@ public class ResumeServlet extends HttpServlet {
                     continue;
                 }
             }
+            if ((startDatesArr[i] == null || startDatesArr[i].trim().length() == 0)
+                    && (endDatesArr[i] == null || endDatesArr[i].trim().length() == 0)
+                    && (companyNameArr[i] == null || companyNameArr[i].trim().length() == 0)
+                    && (companyUrlArr[i] == null || companyUrlArr[i].trim().length() == 0)
+                    && (shortInfoArr[i] == null || shortInfoArr[i].trim().length() == 0)) continue;
             final String companyName = companyNameArr[i];
             Link companyUrl = null;
             String companyUrlString = companyUrlArr[i];
