@@ -139,7 +139,7 @@ public class ResumeServlet extends HttpServlet {
             try {
                 startDate = LocalDate.parse(startDatesArr[i], formatter);
                 endDate = endDatesArr[i].equals("NOW") ?
-                        LocalDate.MAX : LocalDate.parse(startDatesArr[i], formatter);
+                        LocalDate.MAX : LocalDate.parse(endDatesArr[i], formatter);
             } catch (DateTimeParseException e) {
                 throw new IncorrectDateFormat(e, companyName);
             }
