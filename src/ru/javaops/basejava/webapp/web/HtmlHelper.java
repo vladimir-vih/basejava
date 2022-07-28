@@ -1,37 +1,44 @@
 package ru.javaops.basejava.webapp.web;
 
 import ru.javaops.basejava.webapp.Config;
-import ru.javaops.basejava.webapp.model.ContactType;
-import ru.javaops.basejava.webapp.model.Experience;
-import ru.javaops.basejava.webapp.model.Resume;
+import ru.javaops.basejava.webapp.model.*;
 import ru.javaops.basejava.webapp.storage.Storage;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class HtmlHelper {
     private static final Storage STORAGE = Config.getInstance().getSqlStorage();
 
     public static List<Resume> getAllResumes() {
-        return  STORAGE.getAllSorted();
+        return STORAGE.getAllSorted();
     }
 
     public static Resume getResume(String uuid) {
-        return STORAGE.get(uuid);
+        Resume r = STORAGE.get(uuid);
+        List<Experience> experienceList = (List<Experience>) r.getSection(SectionType.EXPERIENCE).getBody();
+        if (experienceList != null) Collections.sort(experienceList);
+        r.addSection(SectionType.EXPERIENCE, new ExperienceSection(experienceList));
+
+        List<Experience> educationList = (List<Experience>) r.getSection(SectionType.EDUCATION).getBody();
+        if (educationList != null) Collections.sort(educationList);
+        r.addSection(SectionType.EDUCATION, new ExperienceSection(educationList));
+        return r;
     }
 
-    public static void deleteResume(String uuid){
+    public static void deleteResume(String uuid) {
         STORAGE.delete(uuid);
     }
 
-    public static void updateResume(Resume r) {STORAGE.update(r);}
+    public static void updateResume(Resume r) {
+        STORAGE.update(r);
+    }
 
-    public static void saveResume(Resume r) {STORAGE.save(r);}
+    public static void saveResume(Resume r) {
+        STORAGE.save(r);
+    }
 
-    public static String getNewUUID(){
+    public static String getNewUUID() {
         return UUID.randomUUID().toString();
     }
 

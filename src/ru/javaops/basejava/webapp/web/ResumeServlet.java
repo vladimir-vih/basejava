@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
@@ -127,9 +128,15 @@ public class ResumeServlet extends HttpServlet {
                     && (companyNameArr[i] == null || companyNameArr[i].trim().length() == 0)
                     && (companyUrlArr[i] == null || companyUrlArr[i].trim().length() == 0)
                     && (shortInfoArr[i] == null || shortInfoArr[i].trim().length() == 0)) continue;
-            final String companyName = companyNameArr[i];
+            String companyName;
+            if (request.getParameterMap().containsKey("same_" + prefix + "CompanyName")) {
+                companyName = companyNameArr[0];
+            } else companyName = companyNameArr[i];
             Link companyUrl = null;
-            String companyUrlString = companyUrlArr[i];
+            String companyUrlString;
+            if (request.getParameterMap().containsKey("same_" + prefix + "CompanyUrl")) {
+                companyUrlString = companyUrlArr[0];
+            } else companyUrlString = companyUrlArr[i];
             if (companyUrlString != null && companyUrlString.trim().length() > 0) {
                 companyUrl = new Link(companyName, companyUrlString);
             }
@@ -147,6 +154,7 @@ public class ResumeServlet extends HttpServlet {
             final String detailedInfo = detailedInfoArr == null ? null : detailedInfoArr[i];
             experienceList.add(new Experience(company, startDate, endDate, shortInfoArr[i], detailedInfo));
         }
+        Collections.sort(experienceList);
         return experienceList;
     }
 }

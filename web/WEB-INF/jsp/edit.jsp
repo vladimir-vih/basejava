@@ -163,41 +163,45 @@
                             </c:forEach>
                             <div class="line_border">
                                 <li> New element<br/><br/>
-                                    <%--<label style="color: red;">Use ckeckbox,
-                                        if you need new element of ${type.title}!
-                                        <input type="checkbox" name="new_${type}" value="true"><br/><br/>
-                                    </label>--%>
                                     <label>Since YYYY-MM-DD:
-                                        <input type="text" size="6" name="<%--new_--%>${type}StartDate"
+                                        <input type="text" size="6" name="${type}StartDate"
                                                minlength="10" maxlength="10"
                                                placeholder="YYYY-MM-DD">
                                     </label>
                                     <br/>
                                     <label>Till YYYY-MM-DD
                                         (write "<b>NOW</b>" if it's current position):
-                                        <input type="text" size="6" name="<%--new_--%>${type}EndDate"
+                                        <input type="text" size="6" name="${type}EndDate"
                                                minlength="3" maxlength="10"
                                                placeholder="YYYY-MM-DD or NOW">
                                     </label>
                                     <br/><br/>
                                     <label>Company Name:
-                                        <input type="text" size="30" name="<%--new_--%>${type}CompanyName"
+                                        <input type="text" size="30" name="${type}CompanyName"
                                                placeholder="Company Name">
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="same_${type}CompanyName">
+                                        Use from the current/last position
                                     </label>
                                     <br/><br/>
                                     <label>Company URL:
-                                        <input type="text" size="75" name="<%--new_--%>${type}CompanyUrl"
+                                        <input type="text" name="${type}CompanyUrl"
                                                placeholder="Company URL">
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" size="75" name="same_${type}CompanyUrl">
+                                        Use from the current/last position
                                     </label>
                                     <br/><br/>
                                     <label>Position name:
-                                        <input type="text" size="30" name="<%--new_--%>${type}ShortInfo"
+                                        <input type="text" size="30" name="${type}ShortInfo"
                                                placeholder="Your position description">
                                     </label>
                                     <br/><br/>
                                     <c:if test="${type.equals(SectionType.EXPERIENCE)}">
                                         <label>Detailed information:
-                                            <textarea rows="30" name="<%--new_--%>${type}DetailedInfo"
+                                            <textarea rows="30" name="${type}DetailedInfo"
                                                       placeholder="Detailed information"></textarea>
                                         </label>
                                         <br/><br/>
