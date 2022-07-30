@@ -3,14 +3,13 @@ package ru.javaops.basejava.webapp;
 import ru.javaops.basejava.webapp.storage.SqlStorage;
 import ru.javaops.basejava.webapp.storage.Storage;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-    private static final File PROPS_FILE = new File("C:/Vova/git/javaops/basejava/config/resumes.properties");
+//    private static final File PROPS_FILE = new File("C:/Vova/git/javaops/basejava/config/resumes.properties");
+    private static final String PROPS_FILE = "/resumes.properties";
     private static final Config INSTANCE = new Config();
     private final Storage sqlStorage;
     private final String storageDir;
@@ -20,7 +19,7 @@ public class Config {
     }
 
     private Config() {
-        try (InputStream is = new FileInputStream(PROPS_FILE)) {
+        try (InputStream is = Config.class.getResourceAsStream(PROPS_FILE)) {
             Properties PROPS = new Properties();
             PROPS.load(is);
             storageDir = PROPS.getProperty("storage.dir");

@@ -16,13 +16,17 @@ public class HtmlHelper {
 
     public static Resume getResume(String uuid) {
         Resume r = STORAGE.get(uuid);
-        List<Experience> experienceList = (List<Experience>) r.getSection(SectionType.EXPERIENCE).getBody();
-        if (experienceList != null) Collections.sort(experienceList);
-        r.addSection(SectionType.EXPERIENCE, new ExperienceSection(experienceList));
+        Section<List<Experience>> experienceSection = r.getSection(SectionType.EXPERIENCE);
+        if (experienceSection != null) {
+            List<Experience> experienceList = experienceSection.getBody();
+            r.addSection(SectionType.EXPERIENCE, new ExperienceSection(experienceList));
+        }
 
-        List<Experience> educationList = (List<Experience>) r.getSection(SectionType.EDUCATION).getBody();
-        if (educationList != null) Collections.sort(educationList);
-        r.addSection(SectionType.EDUCATION, new ExperienceSection(educationList));
+        Section<List<Experience>> educationSection = r.getSection(SectionType.EDUCATION);
+        if (educationSection != null) {
+            List<Experience> educationList = educationSection.getBody();
+            r.addSection(SectionType.EDUCATION, new ExperienceSection(educationList));
+        }
         return r;
     }
 
